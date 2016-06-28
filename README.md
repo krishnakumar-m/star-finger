@@ -1,2 +1,1 @@
-# star-finger
-Star finger
+# Thumbfire
