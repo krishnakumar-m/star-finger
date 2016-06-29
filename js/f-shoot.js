@@ -2,22 +2,38 @@
 var waves = {
     50 : [{
 	    y : 0.2
-	    }],
-    75 :[ {
-	    y : 0.5
-	    } ],    
-    150 :[ {
-	    y : 0.2
-	    } ]
+	    }]
 
     };
+
+
+function randomStarBg() {
+	bg.rect(0, 0, bg.width, bg.height, 'black', 'black');
+	for(var i=0;i < 100;i++) {
+		bg.circle(bg.width * Math.random(), bg.height * Math.random(), 1.2 * Math.random(), 'white', 'rgb(255,255,255,0.5)');
+	    }
+	var img = document.createElement('img');
+	img.src = bg.cvs.toDataURL();
+	return img;
+    }
+bgLeft = 0;
+function panBgLeft() {
+	bgLeft = (bgLeft + 1) % bgImg.width;
+	bg.clear();
+	bg.ctx.drawImage(bgImg, -bgLeft, 0);
+	bg.ctx.drawImage(bgImg, bgImg.width - bgLeft, 0);
+    }
+
+
 function lifeMeter() {
-    
-}
-    
+
+    }
+
 function test() {
 	space = new Canvas('fld', window.innerWidth, window.innerHeight);
-	player = new Ship(new Point(0, 0), new Point(0, 0), 40, 20, 15, 20);
+	bg = new Canvas('bg', window.innerWidth, window.innerHeight);
+	player = new Ship(new Point(0, 0), new Point(0, 0), 40, 20, 20);
+	bgImg = randomStarBg();
 	enemies = [];
 	//enemies.push( new EnemyShip(new Point(space.width, space.height / 2), new Point(-1, 0), 20, 20, 40, 10));
 	var shipControl = false;
@@ -111,6 +127,7 @@ function game() {
 	hitsByEnemy();
 	partSys.update();
 	partSys.show();
+	panBgLeft();
 	levelTimer++;
     }
 
@@ -190,7 +207,9 @@ function newShips() {
 	if(thisWave) {
 		var len = thisWave.length,i;
 		for(i = 0;i < len;i++) {
-			enemies.push(new EnemyShip(new Point(space.width, Math.round(space.height * thisWave[i].y)), new Point(-1, 0), 20, 20, 40, 10));
+			enemies.push(new EnemyShip(new Point(space.width, Math.round(space.height * thisWave[i].y)), new Point(-1, 0), 20, 20, 100, 10));
 		    }
 	    }
     }
+	    
+	    
