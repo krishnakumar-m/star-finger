@@ -1,11 +1,13 @@
-// y relative positionon y axis
+// y relative position on y axis
 var waves = {
     50 : [{
 	    y : 0.2
-	    }]
+	    }],
+    150 : [{
+	    y : 0.5
+	    }]    
 
     };
-
 
 function randomStarBg() {
 	bg.rect(0, 0, bg.width, bg.height, 'black', 'black');
@@ -24,18 +26,19 @@ function panBgLeft() {
 	bg.ctx.drawImage(bgImg, bgImg.width - bgLeft, 0);
     }
 
+var maxLife = 60;
 
 function lifeMeter() {
-
+        var w = Math.round(player.life * bg.width / maxLife);
+        bg.rect(0, 0, w, 10, 'red', 'red');
     }
 
 function test() {
 	space = new Canvas('fld', window.innerWidth, window.innerHeight);
 	bg = new Canvas('bg', window.innerWidth, window.innerHeight);
-	player = new Ship(new Point(0, 0), new Point(0, 0), 40, 20, 20);
+	player = new Ship(new Point(0, 0), new Point(0, 0), 40, 20, maxLife);
 	bgImg = randomStarBg();
 	enemies = [];
-	//enemies.push( new EnemyShip(new Point(space.width, space.height / 2), new Point(-1, 0), 20, 20, 40, 10));
 	var shipControl = false;
 	bullets = [];enemyBullets = [];
 	frameInterval = 1000 / 60;
@@ -46,7 +49,6 @@ function test() {
 		var x = event.touches[0].pageX;
 		var y = event.touches[0].pageY;
 		if(paused) {
-			// timer = window.requestAnimationFrame(loop);
 			loop();
 		    }
 		if(typeof bullt !== 'undefined') {
@@ -57,14 +59,11 @@ function test() {
 			shipControl = true;
 			player.loc.x = Math.round(x - player.w / 2);
 			player.loc.y = Math.round(y - player.h / 2);
-			reload = player.reload;
 
 			bullt = window.setInterval(function() {
-				reload--;
-				if(reload == 0) {
-					bullets.push(new Bullet(new Point(player.loc.x + player.w, player.loc.y), new Point(7, 0), 2, 2, 2));
-					bullets.push(new Bullet(new Point(player.loc.x + player.w, player.loc.y + player.h), new Point(7, 0), 2, 2, 2));
-					reload = player.reload;
+				var bullts = player.tryWeapon();
+				if(bullts) {
+					bullets = bullets.concat(bullts);
 				    }
 			    }, frameInterval);
 		    }
@@ -99,35 +98,21 @@ function game() {
 	space.clear();
 	newShips();
 	player.show();
-	/*enemyShip.move();
-	 enemyShip.show();*/
+	
 	for(i = bullets.length - 1; i >= 0;i--) {
 		bullets[i].move();
 		bullets[i].show();
 		if(bullets[i].loc.x > space.width) {
 			bullets.splice(i, 1);
 		    }
-		/*else if(collisionCheck(bullets[i], enemyShip)) {
-		 partSys.add(new ParticleSystem(10, bullets[i].loc.x, bullets[i].loc.y, space.ctx , config, false));
-		 bullets.splice(i, 1);
-		 }*/
+		
 	    }
         hitEnemy();
-	/*for(i = enemyBullets.length - 1; i >= 0;i--) {
-	 enemyBullets[i].move();
-	 enemyBullets[i].show();
-	 if(enemyBullets[i].loc.x < 0) {
-	 enemyBullets.splice(i, 1);
-	 }    
-	 else if(collisionCheck(enemyBullets[i], player)) {
-	 partSys.add(new ParticleSystem(100, enemyBullets[i].loc.x, enemyBullets[i].loc.y, space.ctx , config, false));
-	 enemyBullets.splice(i, 1);
-	 }
-	 }*/
 	hitsByEnemy();
 	partSys.update();
 	partSys.show();
 	panBgLeft();
+	lifeMeter();
 	levelTimer++;
     }
 

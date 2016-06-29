@@ -16,10 +16,8 @@ Ship.prototype = Object.create(Body.prototype);
 function Ship(loc,vel,w,h,life) {
 	Body.call(this, loc, vel, w, h);
 	this.life = life;
-	//this.weapon = 'twingun';
 	this.counter = 0;
 	this.isPlayer = true;
-	//this.fireWeapon = weapons[this.weapon].fire;
 	this.setWeapon('twingun');
     }
 
@@ -41,11 +39,15 @@ Ship.prototype.tryWeapon = function() {
 	        return this.fireWeapon(this);
 	    }
 };
+
+/*
+Extend all enemy ships from the below class
+*/
 EnemyShip.prototype = Object.create(Ship.prototype);
 function EnemyShip(loc,vel,w,h,life) {
 	Ship.call(this, loc, vel, w, h,life);
 	this.isPlayer = false;
-	//this.setWeapon('oneshot');
+	this.setWeapon('oneshot');
 	
     }
 EnemyShip.prototype.move = function() {

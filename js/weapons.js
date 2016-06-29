@@ -27,7 +27,7 @@ function oneshot(ship) {
 		loc = new Point(ship.loc.x, ship.loc.y + ship.h / 2);
 		vel = new Point(-5, 0);
 	    }
-	return [new EnemyBullet(loc, vel, 6, 2)];
+	return [new EnemyBullet(loc, vel, 6, 2,5)];
     }
     
 function twingun(ship) {
