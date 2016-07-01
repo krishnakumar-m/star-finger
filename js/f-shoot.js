@@ -1,24 +1,44 @@
 // y relative position on y axis
 var waves = {
     50 : [{
-	    y : 0.2
-	    },{
-	    y : 0.4
-	    }],
-    150 : [{
-	    y : 0.1
-	    },{
-	    y : 0.6
-	    }] ,
-
-    100 : [{
-	    y : 0.5
-	    },{
-	    y : 0.3
-	    }]     
+	    y : 0.2,
+	    ship : 'mouse',
+	    w : 12,
+	    h : 12,
+	    hp : 5,
+	    vel : new Point(-4, 0)
+	    },
+	    {
+	    y : 0.5,
+	    ship : 'raider',
+	    w : 24,
+	    h : 12,
+	    hp : 10,
+	    vel : new Point(-2, 0)
+	    }
+	    ]
 
     };
+/*
+ ,{
+ y : 0.4,
+ ship : 'mouse'
+ }],
+ 150 : [{
+ y : 0.1,
+ ship : 'raider'
+ },{
+ y : 0.6
+ }] ,
 
+ 100 : [{
+ y : 0.5,
+ ship : 'mouse'
+ },{
+ y : 0.3,
+ ship : 'raider'
+ }]     
+ */
 function randomStarBg() {
 	bg.clear();
 	for(var i=0;i < 100;i++) {
@@ -26,10 +46,10 @@ function randomStarBg() {
 	    }
 	return bg.cvs.toDataURL();
     }
-    
-    
 
-    
+
+
+
 bgLeft = 0;
 function panBgLeft() {
 	bgLeft = (bgLeft + 1) % bgImg.width;
@@ -46,27 +66,27 @@ function lifeMeter() {
     }
 
 function test() {
-    bg = new Canvas('bg', window.innerWidth, window.innerHeight);
-    var bgs = [{
-  id: 'bg',
-  speed: 1,
-  src: randomStarBg()
-}, {
-  id: 'bg1',
-  speed: 2,
-  src: randomStarBg()
-}, {
-  id: 'bg2',
-  speed: 3,
-  src: randomStarBg()
-}];
+	bg = new Canvas('bg', window.innerWidth, window.innerHeight);
+	var bgs = [{
+		id: 'bg',
+		speed: 1,
+		src: randomStarBg()
+		}, {
+		id: 'bg1',
+		speed: 2,
+		src: randomStarBg()
+		}, {
+		id: 'bg2',
+		speed: 3,
+		src: randomStarBg()
+		}];
 
-    
-    
+
+
 	space = new Canvas('fld', window.innerWidth, window.innerHeight);
-	
+
 	player = new Ship(new Point(0, 0), new Point(0, 0), 40, 20, maxLife);
-	
+
 	Scenery.init(bgs);
 	enemies = [];
 	var shipControl = false;
@@ -122,7 +142,7 @@ function test() {
 
 	    };
         Game.init(game, 60);
-	
+
     }
 
 
@@ -207,12 +227,24 @@ function hitEnemy() {
 	    }
     }
 
+function shipFactory(props) {
+	if(props.ship == 'mouse') {
+		return new Mouse(new Point(space.width, Math.round(space.height * props.y)), props.vel, props.w, props.h, props.hp);
+
+	    }
+	else if(props.ship == 'raider') {
+		return new EnemyShip(new Point(space.width, Math.round(space.height * props.y)), props.vel, props.w, props.h, props.hp);
+
+	    }
+    }
+
+
 function newShips() {
 	var thisWave = waves[levelTimer];
 	if(thisWave) {
 		var len = thisWave.length,i;
 		for(i = 0;i < len;i++) {
-			enemies.push(new Mouse(new Point(space.width, Math.round(space.height * thisWave[i].y)), new Point(-3, 0), 12, 12, 5));
+			enemies.push(shipFactory(thisWave[i]));
 		    }
 	    }
     }
