@@ -51,14 +51,15 @@ function EnemyShip(loc,vel,w,h,life) {
 	
     }
 EnemyShip.prototype.move = function() {
-	var temp = this.loc;
+	/*var temp = this.loc;
 	do {
 		var dx = -1;
 		var dy = Math.round(Math.random() * 2) - 1;
 		temp.add(new Point(dx, dy));
 
 	    }while(temp.y < 0 || temp.y + this.w > space.width);
-	this.loc = temp;
+	this.loc = temp;*/
+	this.loc.add(this.vel);
 	var bllts = this.tryWeapon();
 	if(bllts) {
 	   enemyBullets = enemyBullets.concat(bllts);
@@ -71,3 +72,20 @@ EnemyShip.prototype.show = function() {
 	space.rect(this.loc.x + 2 * w4, this.loc.y + h4, w4, 2 * h4, 'white', 'white');
 	space.rect(this.loc.x, this.loc.y + 3 * h4, this.w, h4, 'red', 'red');
     };
+    
+/*
+Tiny ship
+*/
+Mouse.prototype = Object.create(EnemyShip.prototype);
+
+function Mouse(loc,vel,w,h,life) {
+	EnemyShip.call(this, loc, vel, w, h,life);
+}
+	
+Mouse.prototype.show = function() {
+	var h3 = this.h / 3;
+	var w3 = this.w / 3;
+	space.rect(this.loc.x+w3, this.loc.y, w3*3, h3, 'red', 'red');
+	space.rect(this.loc.x, this.loc.y + h3, w3*3, h3, 'red', 'red');
+	space.rect(this.loc.x+w3, this.loc.y+2*h3, w3*3, h3, 'red', 'red');
+    }; 

@@ -12,7 +12,7 @@ var Game = {
 	        this.game();
 		this.lastTime = new Date().getTime();
 	    }
-	this.timer = window.requestAnimationFrame(loop);
+	this.timer = window.requestAnimationFrame(this.loop.bind(this));
     },
     pause : function() {
 	window.cancelAnimationFrame(this.timer);

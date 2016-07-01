@@ -45,5 +45,5 @@ function twingun(ship) {
 		vel2 = new Point(-7, 0);
 	    }
 			
-	return [new Bullet(loc1,vel1, 2, 2, 2), new Bullet(loc2,vel2, 2, 2, 2)];
+	return [new Bullet(loc1,vel1, 2, 2, 5), new Bullet(loc2,vel2, 2, 2, 5)];
     }
