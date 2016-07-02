@@ -8,7 +8,19 @@ Body.prototype.move = function() {
 	this.loc.add(this.vel);
 
     };
-
+/**
+Powerup
+*/
+Powerup.prototype = Object.create(Body.prototype);
+function Powerup(loc,vel,w,h,life,power) {
+	Body.call(this, loc, vel, w, h);
+	this.life = life;
+	this.power = power;
+    }
+Powerup.prototype.show = function() {
+    space.rect(this.loc.x,this.loc.y,this.w,this.h,'red','white');
+    space.text('A',this.loc.x,this.loc.y+this.h,'Black','20px Arial');
+};
 /**
 Normal ship
 */
@@ -47,7 +59,7 @@ EnemyShip.prototype = Object.create(Ship.prototype);
 function EnemyShip(loc,vel,w,h,life) {
 	Ship.call(this, loc, vel, w, h,life);
 	this.isPlayer = false;
-	this.setWeapon('oneshot');
+	//this.setWeapon('oneshot');
 	
     }
 EnemyShip.prototype.move = function() {
@@ -80,6 +92,7 @@ Mouse.prototype = Object.create(EnemyShip.prototype);
 
 function Mouse(loc,vel,w,h,life) {
 	EnemyShip.call(this, loc, vel, w, h,life);
+	this.setWeapon('oneshot');
 }
 	
 Mouse.prototype.show = function() {
@@ -88,4 +101,39 @@ Mouse.prototype.show = function() {
 	space.rect(this.loc.x+w3, this.loc.y, w3*3, h3, 'red', 'red');
 	space.rect(this.loc.x, this.loc.y + h3, w3*3, h3, 'red', 'red');
 	space.rect(this.loc.x+w3, this.loc.y+2*h3, w3*3, h3, 'red', 'red');
+    }; 
+    
+/* Rat - bigger version of mouse */
+Rat.prototype = Object.create(EnemyShip.prototype);
+
+function Rat(loc,vel,w,h,life) {
+	EnemyShip.call(this, loc, vel, w, h,life);
+	this.setWeapon('oneshot');
+}
+	
+Rat.prototype.show = function() {
+	var h3 = this.h / 3;
+	var w3 = this.w / 3;
+	space.rect(this.loc.x+w3, this.loc.y, w3*3, h3, 'white', 'white');
+	space.rect(this.loc.x, this.loc.y + h3, w3*3, h3, 'red', 'red');
+	space.rect(this.loc.x+w3, this.loc.y+2*h3, w3*3, h3, 'white', 'white');
+    }; 
+    
+/* Warbird - staircase ship */
+Warbird.prototype = Object.create(EnemyShip.prototype);
+
+function Warbird(loc,vel,w,h,life) {
+	EnemyShip.call(this, loc, vel, w, h,life);
+	this.setWeapon('oneshot');
+}
+	
+Warbird.prototype.show = function() {
+	var h = this.h / 5;
+	var w = this.w / 5;
+	var w3 = 3*w;
+	space.rect(this.loc.x+2*w, this.loc.y, w3, h, 'white', 'white');
+	space.rect(this.loc.x+w, this.loc.y + h, w3, h, 'red', 'red');
+	space.rect(this.loc.x, this.loc.y+2*h, w3, h, 'white', 'white');
+	space.rect(this.loc.x+w, this.loc.y+3*h, w3, h, 'red', 'red');
+	space.rect(this.loc.x+2*w, this.loc.y + 4*h, w3, h, 'white', 'white');
     }; 
