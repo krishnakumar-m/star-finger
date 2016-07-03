@@ -24,31 +24,44 @@ function Homer(loc,vel,w,h,hp,isPlayer) {
 	this.isPlayer = isPlayer;
 	this.target = findNearestTarget(isPlayer);
 	this.life = 0;
+	this.prevLoc = loc;
+	this.lifeTimer = 20;
     }
 Homer.prototype.show = function() {
-	space.rect(this.loc.x, this.loc.y, this.w, this.h, 'red', 'blue');
+	//space.rect(this.loc.x, this.loc.y, this.w, this.h, 'red', 'blue');
+	var tmp = space.ctx.lineWidth;
+	space.ctx.beginPath();
+	space.ctx.lineWidth = 5;
+	space.ctx.strokeStyle = 'Green';
+	space.ctx.moveTo(this.prevLoc.x, this.prevLoc.y);
+	space.ctx.lineTo(this.loc.x, this.loc.y);
+	space.ctx.stroke();
+	space.ctx.lineWidth = tmp;
+	
 
     };
 
 Homer.prototype.move = function() {
 
-        if(this.life <= 50) {
-		if(this.loc.x > this.target.x) {
-			this.loc.x -= this.vel.x; 
-		} else if(this.loc.x < this.target.x) {
-			this.loc.x += this.vel.x; 
-		} 
-		if(this.loc.y > this.target.y) {
-			this.loc.y -= this.vel.y;
-		} else if(this.loc.y < this.target.y) {
-			this.loc.y += this.vel.y;
-		}
+	if(this.lifeTimer > 0) { 
+		var targetX = this.target.x - this.loc.x;
+		var targetY = this.target.y - this.loc.y;
+		var rotation = Math.atan2(targetY, targetX) * 180 / Math.PI;
+		var vx = 5 * (90 - Math.abs(rotation)) / 90;
+		var vy;
+		if(rotation < 0) {
+			vy = -5 + Math.abs(vx);//Going upwards.
+		    }
+		else {
+			vy = 5 - Math.abs(vx);//Going downwards.
+		    }
+		this.vel = new Point(Math.round(vx), Math.round(vy));
+
+		this.lifeTimer--;
+		
 	    }
-	else {
-		this.loc.x += this.vel.x;    
-		this.loc.y += this.vel.y;
-	    }
-	this.life++;
+	this.prevLoc = {x :this.loc.x,y:this.loc.y};
+	this.loc.add(this.vel);
     };
 
 
@@ -59,16 +72,35 @@ function findNearestTarget(isPlayer) {
 		return enemies[getRandomInt(0, len - 1)].loc;
 	    }
 
-	return player.loc;
+	return {x : player.loc.x, y: player.loc.y};
     }
-    
-    
- Laser.prototype = Object.create(Bullet.prototype);
- function Laser(loc,hp) {
-	Bullet.call(this, new Point(0,loc.y), new Point(-loc.x,0), loc.x, 5, 10);
-    }
- Laser.prototype.show = function() {
-     space.rect(this.loc.x, this.loc.y, this.w, this.h, 'white', 'yellow');
 
- };
- 
+
+Laser.prototype = Object.create(Bullet.prototype);
+function Laser(loc,hp) {
+	Bullet.call(this, new Point(0, loc.y), new Point(-loc.x, 0), loc.x, 5, 10);
+    }
+Laser.prototype.show = function() {
+	space.rect(this.loc.x, this.loc.y, this.w, this.h, 'white', 'yellow');
+
+    };
+
+Mine.prototype = Object.create(Bullet.prototype);
+function Mine(loc,vel,hp,maxDist) {
+	Bullet.call(this, loc, vel, 1, 1, hp);
+	this.dist = maxDist;
+    }
+Mine.prototype.show = function() {
+	space.rect(this.loc.x, this.loc.y, 1, 1, 'orange', 'orange');
+
+    };
+
+Mine.prototype.move = function() {
+
+	if(this.dist == 0) {
+
+	    }
+	else {
+		this.dist--;
+	    }
+    };

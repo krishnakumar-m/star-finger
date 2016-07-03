@@ -19,7 +19,7 @@ function Powerup(loc,vel,w,h,life,power) {
     }
 Powerup.prototype.show = function() {
     space.rect(this.loc.x,this.loc.y,this.w,this.h,'red','white');
-    space.text('A',this.loc.x,this.loc.y+this.h,'Black','20px Arial');
+    space.text(this.power,this.loc.x,this.loc.y+this.h,'Black','10px Arial');
 };
 /**
 Normal ship
@@ -98,9 +98,9 @@ function Mouse(loc,vel,w,h,life) {
 Mouse.prototype.show = function() {
 	var h3 = this.h / 3;
 	var w3 = this.w / 3;
-	space.rect(this.loc.x+w3, this.loc.y, w3*3, h3, 'red', 'red');
-	space.rect(this.loc.x, this.loc.y + h3, w3*3, h3, 'red', 'red');
-	space.rect(this.loc.x+w3, this.loc.y+2*h3, w3*3, h3, 'red', 'red');
+	space.rect(this.loc.x+w3, this.loc.y, this.w, h3, 'red', 'red');
+	space.rect(this.loc.x, this.loc.y + h3,this.w, h3, 'red', 'red');
+	space.rect(this.loc.x+w3, this.loc.y+2*h3, this.w, h3, 'red', 'red');
     }; 
     
 /* Rat - bigger version of mouse */
@@ -108,15 +108,15 @@ Rat.prototype = Object.create(EnemyShip.prototype);
 
 function Rat(loc,vel,w,h,life) {
 	EnemyShip.call(this, loc, vel, w, h,life);
-	this.setWeapon('oneshot');
+	this.setWeapon('homer');
 }
 	
 Rat.prototype.show = function() {
 	var h3 = this.h / 3;
 	var w3 = this.w / 3;
-	space.rect(this.loc.x+w3, this.loc.y, w3*3, h3, 'white', 'white');
-	space.rect(this.loc.x, this.loc.y + h3, w3*3, h3, 'red', 'red');
-	space.rect(this.loc.x+w3, this.loc.y+2*h3, w3*3, h3, 'white', 'white');
+	space.rect(this.loc.x+w3, this.loc.y, this.w, h3, 'white', 'white');
+	space.rect(this.loc.x, this.loc.y + h3, this.w, h3, 'red', 'red');
+	space.rect(this.loc.x+w3, this.loc.y+2*h3, this.w, h3, 'white', 'white');
     }; 
     
 /* Warbird - staircase ship */
@@ -124,7 +124,7 @@ Warbird.prototype = Object.create(EnemyShip.prototype);
 
 function Warbird(loc,vel,w,h,life) {
 	EnemyShip.call(this, loc, vel, w, h,life);
-	this.setWeapon('oneshot');
+	this.setWeapon('3shot');
 }
 	
 Warbird.prototype.show = function() {
