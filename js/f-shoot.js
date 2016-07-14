@@ -448,7 +448,7 @@ function newShips() {
 function nextWaveIfEndless() {
 	if(endless) {
 		waves = {};
-		var nextTime = levelTimer + getRandomInt(50, 100);
+		var nextTime = levelTimer + getRandomInt(100, 200);
 		var nextWave = [], shipObj;
 		var nShips = getRandomInt(1, 10);
 
