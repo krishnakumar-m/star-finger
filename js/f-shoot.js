@@ -65,10 +65,6 @@ function getSprites(id) {
 
 
 
-
-
-
-
 var waves = {
     50 : [ {
 	    y : 0.1,
@@ -180,16 +176,16 @@ var maxLife = 60;
 
 function lifeMeter() {
         var w = Math.round(player.life * bg.width / maxLife);
-        bg.rect(0, 0, w, 10, 'red', 'red');
+       bg.rect(0, 0, w, 10, 'red', 'red');
     }
 
 function test() {
-	bg = new Canvas('bg', window.innerWidth, window.innerHeight);
+	/*bg = new Canvas('bg', window.innerWidth, window.innerHeight);
 	var bgs = [{
 		id: 'bg',
 		speed: 1,
 		src: randomStarBg()
-		}];
+		}];*/
 
 	/*
 	 , {
@@ -206,7 +202,7 @@ function test() {
 	space = new Canvas('fld', window.innerWidth, window.innerHeight);
 
 	player = new Ship(new Point(0, 0), new Point(0, 0), 48, 40, maxLife);
-	Scenery.init(bgs);
+	//Scenery.init(bgs);
 
 
 
@@ -285,8 +281,8 @@ function game() {
 	movePowerups();
 	partSys.update();
 	partSys.show();
-	Scenery.scene();
-	lifeMeter();
+	//Scenery.scene();
+	//lifeMeter();
 	checkDeath();
 	levelTimer++;
     }
