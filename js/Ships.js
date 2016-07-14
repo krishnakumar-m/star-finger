@@ -35,9 +35,8 @@ function Ship(loc,vel,w,h,life) {
     }
 
 Ship.prototype.show = function() {
-	
-	space.ctx.putImageData(sprites[this.shipType],this.loc.x,this.loc.y);
-    };
+        space.ctx.drawImage(ships[this.shipType].sprite,this.loc.x,this.loc.y);
+};
 Ship.prototype.setWeapon = function(weaponId) {
     this.weapon = weaponId;
     this.fireWeapon = weapons[this.weapon].fire;
