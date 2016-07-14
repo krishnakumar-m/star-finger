@@ -202,11 +202,6 @@ function test() {
 	 src: randomStarBg()
 	 }
 	 */
-	/*mouse(ships.mouse.w, ships.mouse.h);
-	crosswing(48, 40);
-	raider(ships.raider.w, ships.raider.h);
-	warbird(ships.warbird.w, ships.warbird.h);
-	rat(ships.rat.w, ships.rat.h);*/
 	preLoadShipSprites();
 	space = new Canvas('fld', window.innerWidth, window.innerHeight);
 
@@ -221,8 +216,8 @@ function test() {
         levelTimer = 0;
 	nextWaveIfEndless();
 	space.cvs.ontouchstart = function() {
-		var x = event.touches[0].pageX;
-		var y = event.touches[0].pageY;
+		var x = event.touches[0].clientX;
+		var y = event.touches[0].clientY;
 
 		if(typeof bullt !== 'undefined') {
 			window.clearInterval(bullt);
@@ -249,8 +244,8 @@ function test() {
 		event.preventDefault();
 		if(shipControl) {
 
-			player.loc.x = Math.round(event.touches[0].pageX - player.w / 2);
-			player.loc.y = Math.round(event.touches[0].pageY - player.h / 2);
+			player.loc.x = Math.round(event.touches[0].clientX - player.w / 2);
+			player.loc.y = Math.round(event.touches[0].clientY - player.h / 2);
 
 		    }
 
