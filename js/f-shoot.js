@@ -211,9 +211,14 @@ function test() {
 	paused = false;
         levelTimer = 0;
 	nextWaveIfEndless();
+	
+	document.body.addEventListener('touchmove', function(event) {
+		event.preventDefault();
+	    }, false);
+	
 	space.cvs.ontouchstart = function() {
-		var x = event.touches[0].clientX;
-		var y = event.touches[0].clientY;
+		var x = event.touches[0].pageX;
+		var y = event.touches[0].pageY;
 
 		if(typeof bullt !== 'undefined') {
 			window.clearInterval(bullt);
@@ -240,8 +245,8 @@ function test() {
 		event.preventDefault();
 		if(shipControl) {
 
-			player.loc.x = Math.round(event.touches[0].clientX - player.w / 2);
-			player.loc.y = Math.round(event.touches[0].clientY - player.h / 2);
+			player.loc.x = Math.round(event.touches[0].pageX - player.w / 2);
+			player.loc.y = Math.round(event.touches[0].pageY - player.h / 2);
 
 		    }
 
