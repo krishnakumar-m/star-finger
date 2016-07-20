@@ -68,7 +68,7 @@ Homer.prototype.move = function() {
 function findNearestTarget(isPlayer) {
 	if(isPlayer) {
 		var  len= enemies.length;
-
+                if(len === 0) { return new Point(0,0); }
 		return enemies[getRandomInt(0, len - 1)].loc;
 	    }
 

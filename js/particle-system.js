@@ -72,10 +72,12 @@ function Particle(x,y,ctx,config) {
 
 	this.show = function() {
 		this.ctx.beginPath();
+		var tmp = this.ctx.globalCompositeOperation;
 		this.ctx.globalCompositeOperation = "lighter";
 		this.ctx.arc(this.loc.x, this.loc.y, this.size, 0, 2 * Math.PI);
 		this.ctx.fillStyle = 'rgba(' + this.color.r + ',' + this.color.g + ',' + this.color.b + ',' + this.life / this.maxLife + ')';
 		this.ctx.fill();
+		this.ctx.globalCompositeOperation = tmp;
 	    };
     }
 

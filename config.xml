@@ -20,6 +20,8 @@
 <icon src="icons/xhdpi.png" platform="android" qualifier="xhdpi" />
 <icon src="icons/xxhdpi.png" platform="android" qualifier="xxhdpi" />
 <icon src="icons/xxxhdpi.png" platform="android" qualifier="xxxhdpi" />
+  
+    
     <platform name="android" >
   <preference name="orientation" value="landscape" />
 </platform>

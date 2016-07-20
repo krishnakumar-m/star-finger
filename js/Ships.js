@@ -18,8 +18,9 @@ function Powerup(loc,vel,w,h,life,power) {
 	this.power = power;
     }
 Powerup.prototype.show = function() {
-    space.rect(this.loc.x,this.loc.y,this.w,this.h,'red','white');
-    space.text(this.power,this.loc.x,this.loc.y+this.h,'Black','10px Arial');
+   /* space.rect(this.loc.x,this.loc.y,this.w,this.h,'red','white');
+    space.text(this.power,this.loc.x,this.loc.y+this.h,'Black','10px Arial');*/
+    space.ctx.drawImage(sprites[this.power],this.loc.x,this.loc.y);
 };
 /**
 Normal ship
@@ -105,3 +106,16 @@ function Warbird(loc,vel,w,h,life) {
 	this.shipType ='warbird';
 }
 	
+/* Rock */
+
+Rock.prototype = Object.create(Body.prototype);
+
+function Rock(loc,vel,w,h,life,img) {
+	Body.call(this, loc, vel, w, h);
+	this.image = img;
+	this.life = life;
+}
+
+Rock.prototype.show = function() {
+        space.ctx.drawImage(this.image,this.loc.x,this.loc.y);
+};
