@@ -1,6 +1,7 @@
 // y relative position on y axis
 var shipList = ['crosswing','mouse','raider','warbird','rat'];
-
+//var shipList = ['crosswing','warbird'];
+var powerupsList = ['oneshot','health','homer','twingun','3shot'];
 var ships = {
     'crosswing' : {
 	w : 48,
@@ -40,7 +41,7 @@ var ships = {
     };
 var sprites = {};
 
-
+var debrisTime = getRandomInt(200,400);
 function preLoadShipSprites() {
     var len = shipList.length;
     
@@ -64,6 +65,35 @@ function getSprites(id) {
 }
 
 
+function debrisImage(x) {
+    var cvs = new Canvas('temp', x, x);
+    
+    rock(x,x,cvs);
+    
+    var img = new Image();
+    img.src = cvs.cvs.toDataURL('img/png');
+    
+    return img;
+}
+
+
+function preloadPowerSprites() {
+    
+    var len = powerupsList.length;
+    var cvs = new Canvas('fld',25, 30);
+    for(var i=0;i<len;i++) {
+	var thisPower = powerupsList[i];
+	
+	cvs.clear();
+	powerUp(25,30,cvs,thisPower);
+	var img = new Image();
+        img.src = cvs.cvs.toDataURL('img/png');
+	
+	sprites[thisPower] = img;
+    }
+    
+    
+}
 
 var waves = {
     50 : [ {
@@ -172,11 +202,13 @@ function randomStarBg() {
 
 
 
-var maxLife = 60;
+var maxLife = 100;
 
 function lifeMeter() {
         var w = Math.round(player.life * bg.width / maxLife);
        bg.rect(0, 0, w, 10, 'red', 'red');
+       
+    //   bg.text(JSON.stringify(enemies),0,100);
     }
 
 function test() {
@@ -185,10 +217,11 @@ function test() {
 		id: 'bg',
 		speed: 1,
 		src: randomStarBg()
-		}];
+	       }
+	       ];
 
-	/*
-	 , {
+	
+	/* , {
 	 id: 'bg1',
 	 speed: 2,
 	 src: randomStarBg()
@@ -196,12 +229,13 @@ function test() {
 	 id: 'bg2',
 	 speed: 3,
 	 src: randomStarBg()
-	 }
-	 */
+	 }];*/
+	 
 	preLoadShipSprites();
+	preloadPowerSprites();
 	space = new Canvas('fld', window.innerWidth, window.innerHeight);
 
-	player = new Ship(new Point(0, 0), new Point(0, 0), 48, 40, maxLife);
+	player = new Ship(new Point(0, space.height/2), new Point(0, 0), 48, 40, maxLife);
 	Scenery.init(bgs);
 
 
@@ -270,6 +304,7 @@ function test() {
 function game() {
 	space.clear();
 	newShips();
+	debrisMaker();
 	player.show();
 
 	for(i = bullets.length - 1; i >= 0;i--) {
@@ -310,10 +345,14 @@ function movePowerups () {
 	        powerUps[i].move();
 		powerUps[i].show();
 		if(collisionCheck(player, powerUps[i])) {
-		        player.setWeapon(powerUps[i].power);
+		        if(powerUps[i].power =='health') {
+			    player.life += Math.round(maxLife/4);
+			} else {
+		            player.setWeapon(powerUps[i].power);
+			}
 			powerUps.splice(i, 1);
 		    }
-		else if(powerUps[i] <= space.width) {
+		else if(powerUps[i].loc.x < 0) {
 			powerUps.splice(i, 1);
 		    }
 	    }
@@ -340,8 +379,9 @@ function hitEnemy() {
 	var i=enemies.length - 1,thisEnemy,j,myBullet;
 	for(;i >= 0;i--) {
 
-		enemies[i].move();
+		//enemies[i].move();
 		thisEnemy = enemies[i];
+		thisEnemy.move();
 		thisEnemy.show();
 		if(thisEnemy.loc.x < 0) {
 			enemies.splice(i, 1);
@@ -352,11 +392,22 @@ function hitEnemy() {
 				myBullet = bullets[j];
 				if(collisionCheck(myBullet, thisEnemy)) {
 					partSys.add(new ParticleSystem(10, myBullet.loc.x, myBullet.loc.y, space.ctx , config, false));
-					enemies[i].life -= myBullet.hp;
-					if(enemies[i].life <= 0) {
-					        if(Math.random() > 0.5) {
-
-							powerUps.push(new Powerup(myBullet.loc, new Point(-1, 0), 20, 30, 10, thisEnemy.weapon));
+				//	try{
+					thisEnemy.life -= myBullet.hp;
+					/*} catch(e) {
+					    alert(JSON.stringify(enemies));
+					    alert(i);
+					}*/
+					if(thisEnemy.life <= 0) {
+					       var decider = Math.random();
+					        if( decider > 0.5) {
+                                                        var thisPowerUp =thisEnemy.weapon;
+							if(decider < 0.6) {
+							    thisPowerUp = 'health';
+							} 
+							if(thisPowerUp) {
+							    powerUps.push(new Powerup(thisEnemy.loc, new Point(-1, 0), 20, 30, 10, thisPowerUp));
+							}
 						    }
 						enemies.splice(i, 1);
 					    }
@@ -446,8 +497,8 @@ function nextWaveIfEndless() {
 		waves = {};
 		var nextTime = levelTimer + getRandomInt(100, 200);
 		var nextWave = [], shipObj;
-		var nShips = getRandomInt(1, 10);
-
+		var nShips = getRandomInt(1, 5);
+               
 		var interval = 1 / (nShips + 1);
 		var nAvailShips = shipList.length;
 		for(i = 1;i <= nShips;i++) {
@@ -459,3 +510,15 @@ function nextWaveIfEndless() {
 		waves[nextTime] = nextWave;
 	    }
     } 
+    
+    
+function debrisMaker() {
+    if(levelTimer === debrisTime) {
+	var loc = new Point(space.width,getRandomInt(50,space.height-50));
+	var vel = new Point(getRandomInt(-1,-5),0);
+	var w = getRandomInt(20,50);
+	
+	enemies.push(new Rock(loc,vel,w,w,w,debrisImage(w)));
+	debrisTime += getRandomInt(200,400);
+    }
+}
