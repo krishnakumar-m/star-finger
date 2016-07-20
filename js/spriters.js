@@ -268,3 +268,107 @@ function rat(w,h,cvs) {
 	ctx.stroke();
 	ctx.fill();
     }
+    
+    
+function line(x1,y1,x2,y2,level) {
+    var x3 = getRandomInt(x1,x2);
+    var y3 = getRandomInt(y1,y2);
+    if(level == 0) {
+	return [ {x:x1,y:y1},{x:x3,y:y3},{x:x2,y:y2}  ];
+    }
+    
+   return line(x1,y1,x3,y3,level-1).concat([{x:x3,y:y3}]).concat(line(x3,y3,x2,y2,level-1));
+}
+
+
+function rock(w,h,cvs) {
+    
+    var x1 = getRandomInt(0,w);
+    var y1 = 0;
+    
+    var x2 = 0;
+    var y2 = getRandomInt(0,h);
+    
+    var x3 = getRandomInt(0,w);
+    var y3 = h;
+    
+    var x4 = w;
+    var y4 = getRandomInt(0,h);
+    
+    var maxLevel = 1;
+    
+    cvs.ctx.beginPath();
+    
+    var output = line(x1,y1,x2,y2,maxLevel).concat(
+                 line(x2,y2,x3,y3,maxLevel)).concat(
+                 line(x3,y3,x4,y4,maxLevel)).concat(
+                 line(x4,y4,x1,y1,maxLevel));
+		 
+   cvs.ctx.moveTo(output[0].x,output[0].y);
+   
+   var len = output.length;
+   
+   for(i=1;i<len;i++) {
+       cvs.ctx.lineTo(output[i].x,output[i].y);
+   }
+   
+   cvs.ctx.closePath();
+   cvs.ctx.lineWidth =w/3;
+   
+   cvs.ctx.strokeStyle = 'rgb(130,95,73)';
+   cvs.ctx.stroke();
+   cvs.ctx.fillStyle = 'rgb(153,111,86)';
+   cvs.ctx.fill();
+   
+ }
+ 
+ 
+ function powerUp(w,h,cvs,content) {
+
+  //  cvs.rect(0,0,w,h,'Red','White');
+  var unit = h/18;
+  
+  //cvs.rect(w/2-7,h/2,15,5,'Yellow','Green');
+ //cvs.text('LIFE',w/2-20,h/2+5,'Red','20px bold');
+ cvs.ctx.save();
+ /*cvs.ctx.translate(w/2-unit,8*unit);
+ bullet(null,unit,cvs.ctx);*/
+ cvs.ctx.textAlign = 'center';
+ cvs.text(content.charAt(0),w/2,0.67*h,'Green','bold '+w*0.4+'px arial');
+ 
+ 
+ 
+   var grd = cvs.ctx.createLinearGradient(unit,0,w-unit,0);
+    grd.addColorStop(0,"white");
+    grd.addColorStop(0.2,"rgba(255,255,255,0.3)");
+    grd.addColorStop(0.5,"rgba(255,255,255,0)");
+    grd.addColorStop(0.8,"rgba(255,255,255,0.3)");
+    grd.addColorStop(1,"white");
+   
+  cvs.rect(unit,4*unit,w-2*unit,10*unit,'White',grd);
+  
+  grd = cvs.ctx.createLinearGradient(0,0,0,2*unit);
+    grd.addColorStop(0,"Gray");
+    grd.addColorStop(0.5,"Gold");
+    grd.addColorStop(1,"Gray");
+  //  grd = 'Gold';
+  cvs.roundRect(0,0,w,2*unit,unit,grd,'Black');
+ // grd = 'Gold';
+  grd = cvs.ctx.createLinearGradient(0,3*unit,0,5*unit);
+    grd.addColorStop(0,"Gray");
+    grd.addColorStop(0.5,"Gold");
+    grd.addColorStop(1,"Gray");
+  cvs.roundRect(0,3*unit,w,2*unit,unit,grd,'Black');
+  grd = cvs.ctx.createLinearGradient(0,13*unit,0,15*unit);
+    grd.addColorStop(0,"Gray");
+    grd.addColorStop(0.5,"Gold");
+    grd.addColorStop(1,"Gray");
+  cvs.roundRect(0,13*unit,w,2*unit,unit,grd,'Black');
+  grd = cvs.ctx.createLinearGradient(0,h-2*unit,0,h);
+    grd.addColorStop(0,"Gray");
+    grd.addColorStop(0.5,"Gold");
+    grd.addColorStop(1,"Gray");
+  cvs.roundRect(0,h-2*unit,w,2*unit,unit,grd,'Black');
+  
+    cvs.ctx.restore();
+}
