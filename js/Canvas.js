@@ -1,6 +1,9 @@
 
 function Canvas(cvsid,w,h) {
 	this.cvs = document.getElementById(cvsid);
+	if(!this.cvs) {
+	    this.cvs = document.createElement('canvas');
+	}
 	this.ctx = this.cvs.getContext('2d');
 	this.width = this.cvs.width = w || 0;
 	this.height = this.cvs.height = h || 0;
