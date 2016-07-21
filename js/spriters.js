@@ -1,13 +1,13 @@
 function crosswing(w,h,cvs) {
-	
+
 	var unit = w / 18;
 	var lw = 1;
 	cvs.ctx.save();
-        cvs.ctx.lineWidth=lw;
-	var grd = cvs.ctx.createLinearGradient(6*unit,0,w,0);
-	grd.addColorStop(0,'Black');
-	grd.addColorStop(1,'White');
-	
+        cvs.ctx.lineWidth = lw;
+	var grd = cvs.ctx.createLinearGradient(6 * unit, 0, w, 0);
+	grd.addColorStop(0, 'Black');
+	grd.addColorStop(1, 'White');
+
 	cvs.ctx.fillStyle = grd; 
 	cvs.ctx.beginPath();
 	cvs.ctx.moveTo(11 * unit, unit);
@@ -27,15 +27,15 @@ function crosswing(w,h,cvs) {
 	cvs.ctx.stroke();
 	cvs.ctx.fill();
 
-	grd = cvs.ctx.createLinearGradient(3*unit,0,8*unit,0);
-	grd.addColorStop(0,'White');
-	grd.addColorStop(1,'Gray');
+	grd = cvs.ctx.createLinearGradient(3 * unit, 0, 8 * unit, 0);
+	grd.addColorStop(0, 'White');
+	grd.addColorStop(1, 'Gray');
 	cvs.ctx.fillStyle = grd;
 	cvs.ctx.beginPath();
 	cvs.ctx.moveTo(3 * unit, 5 * unit);
 	cvs.ctx.lineTo(8 * unit, 5 * unit);
 	cvs.ctx.lineTo(4 * unit, unit);
-	cvs.ctx.lineTo(2*unit, 2*unit);
+	cvs.ctx.lineTo(2 * unit, 2 * unit);
 	cvs.ctx.closePath();
 	cvs.ctx.stroke();
 	cvs.ctx.fill();
@@ -44,69 +44,69 @@ function crosswing(w,h,cvs) {
 	cvs.ctx.moveTo(3 * unit, 10 * unit);
 	cvs.ctx.lineTo(8 * unit, 10 * unit);
 	cvs.ctx.lineTo(4 * unit, 14 * unit);
-	cvs.ctx.lineTo(2*unit, 13 * unit);
+	cvs.ctx.lineTo(2 * unit, 13 * unit);
 	cvs.ctx.closePath();
 	cvs.ctx.stroke();
 	cvs.ctx.fill();
 
-	grd = cvs.ctx.createLinearGradient(0,6*unit,0,9*unit);
-	grd.addColorStop(0,'Gray');
-	grd.addColorStop(0.5,'DarkGray');
-	grd.addColorStop(1,'Gray');
-	cvs.roundRect(2 * unit, 6 * unit, 16 * unit-lw, 3 * unit, unit, grd, 'Black');
-	grd = cvs.ctx.createLinearGradient(0,5*unit,0,7*unit);
-	grd.addColorStop(0,'Black');
-	grd.addColorStop(0.5,'Crimson');
-	grd.addColorStop(1,'Black');
+	grd = cvs.ctx.createLinearGradient(0, 6 * unit, 0, 9 * unit);
+	grd.addColorStop(0, 'Gray');
+	grd.addColorStop(0.5, 'DarkGray');
+	grd.addColorStop(1, 'Gray');
+	cvs.roundRect(2 * unit, 6 * unit, 16 * unit - lw, 3 * unit, unit, grd, 'Black');
+	grd = cvs.ctx.createLinearGradient(0, 5 * unit, 0, 7 * unit);
+	grd.addColorStop(0, 'Black');
+	grd.addColorStop(0.5, 'Crimson');
+	grd.addColorStop(1, 'Black');
 	cvs.roundRect(3 * unit, 5 * unit, 9 * unit, 2 * unit, unit, grd, 'Black');
-	grd = cvs.ctx.createLinearGradient(0,8*unit,0,10*unit);
-	grd.addColorStop(0,'Black');
-	grd.addColorStop(0.5,'Crimson');
-	grd.addColorStop(1,'Black');
+	grd = cvs.ctx.createLinearGradient(0, 8 * unit, 0, 10 * unit);
+	grd.addColorStop(0, 'Black');
+	grd.addColorStop(0.5, 'Crimson');
+	grd.addColorStop(1, 'Black');
 	cvs.roundRect(3 * unit, 8 * unit, 9 * unit, 2 * unit, unit, grd, 'Black');
-	
-        grd = cvs.ctx.createLinearGradient(0,6.5*unit,0,8.5*unit);
-	grd.addColorStop(0,'DarkGray');
-	grd.addColorStop(0.5,'White');
-	grd.addColorStop(1,'DarkGray');
-	cvs.rect(lw, 6.5 * unit, 2 * unit, 2 * unit, null,grd); //'White');
-	
 
-        grd = cvs.ctx.createLinearGradient(0,unit,0,2*unit);
-	grd.addColorStop(0,'Gray');
-	grd.addColorStop(0.5,'Red');
-	grd.addColorStop(1,'Gray');
+        grd = cvs.ctx.createLinearGradient(0, 6.5 * unit, 0, 8.5 * unit);
+	grd.addColorStop(0, 'DarkGray');
+	grd.addColorStop(0.5, 'White');
+	grd.addColorStop(1, 'DarkGray');
+	cvs.rect(lw, 6.5 * unit, 2 * unit, 2 * unit, null, grd); //'White');
+
+
+        grd = cvs.ctx.createLinearGradient(0, unit, 0, 2 * unit);
+	grd.addColorStop(0, 'Gray');
+	grd.addColorStop(0.5, 'Red');
+	grd.addColorStop(1, 'Gray');
 	cvs.roundRect(unit, unit, 4 * unit, unit, unit / 2, grd, 'black');
-	grd = cvs.ctx.createLinearGradient(0,h-2*unit,0,h-unit);
-	grd.addColorStop(0,'Gray');
-	grd.addColorStop(0.5,'Red');
-	grd.addColorStop(1,'Gray');
+	grd = cvs.ctx.createLinearGradient(0, h - 2 * unit, 0, h - unit);
+	grd.addColorStop(0, 'Gray');
+	grd.addColorStop(0.5, 'Red');
+	grd.addColorStop(1, 'Gray');
 	cvs.roundRect(unit, h - 2 * unit, 4 * unit, unit, unit / 2, grd, 'black');
-	grd = cvs.ctx.createLinearGradient(0,0,0,2*unit);
-	grd.addColorStop(0,'Gray');
-	grd.addColorStop(0.5,'Red');
-	grd.addColorStop(1,'Gray');
-	cvs.roundRect(10 * unit, lw, 8 * unit-lw, 2 * unit, unit, grd, 'black');
-	grd = cvs.ctx.createLinearGradient(0,h - 2 * unit,0,h);
-	grd.addColorStop(0,'Gray');
-	grd.addColorStop(0.5,'Red');
-	grd.addColorStop(1,'Gray');
-	cvs.roundRect(10 * unit, h - 2 * unit, 8 * unit-lw, 2 * unit-lw, unit, grd, 'black');
-        grd = cvs.ctx.createLinearGradient(0,6.5 * unit,0,8.5*unit);
-	grd.addColorStop(0,'Gray');
-	grd.addColorStop(0.5,'White');
-	grd.addColorStop(1,'Gray');
+	grd = cvs.ctx.createLinearGradient(0, 0, 0, 2 * unit);
+	grd.addColorStop(0, 'Gray');
+	grd.addColorStop(0.5, 'Red');
+	grd.addColorStop(1, 'Gray');
+	cvs.roundRect(10 * unit, lw, 8 * unit - lw, 2 * unit, unit, grd, 'black');
+	grd = cvs.ctx.createLinearGradient(0, h - 2 * unit, 0, h);
+	grd.addColorStop(0, 'Gray');
+	grd.addColorStop(0.5, 'Red');
+	grd.addColorStop(1, 'Gray');
+	cvs.roundRect(10 * unit, h - 2 * unit, 8 * unit - lw, 2 * unit - lw, unit, grd, 'black');
+        grd = cvs.ctx.createLinearGradient(0, 6.5 * unit, 0, 8.5 * unit);
+	grd.addColorStop(0, 'Gray');
+	grd.addColorStop(0.5, 'White');
+	grd.addColorStop(1, 'Gray');
 	cvs.roundRect(13 * unit, 6.5 * unit, 3 * unit, 2 * unit, unit, grd, 'black');
 	cvs.ctx.restore();
-	
+
     }
 
 
 function mouse(w,h,cvs) {
-	
+
 	var ctx = cvs.ctx;
 	var r = w / 5;
-	
+
 	var startAngle = 0.75 * Math.PI;
 	var endAngle = 1.25 * Math.PI;
 	var innerRadRatio = 0.25;
@@ -116,12 +116,12 @@ function mouse(w,h,cvs) {
 	var y2 = r - r * Math.sin(startAngle) * innerRadRatio;
 	var y3 = r - r * Math.sin(endAngle);
 	var y4 = r - r * Math.sin(endAngle) * innerRadRatio;
-       ctx.strokeStyle = 'White';
-       
-        var grd = ctx.createLinearGradient(0,0,0,h);
-	grd.addColorStop(0,'Gray');
-	grd.addColorStop(0.5,'White');
-	grd.addColorStop(1,'Gray');
+	ctx.strokeStyle = 'White';
+
+        var grd = ctx.createLinearGradient(0, 0, 0, h);
+	grd.addColorStop(0, 'Gray');
+	grd.addColorStop(0.5, 'White');
+	grd.addColorStop(1, 'Gray');
 	ctx.fillStyle = grd;
 	ctx.beginPath();
 	ctx.arc(4 * r, r, r, endAngle, startAngle);
@@ -138,7 +138,7 @@ function mouse(w,h,cvs) {
 	ctx.fill();
     }
 function raider(w,h,cvs) {
-    
+
 	var unit = w / 4;
 	//var cvs = new Canvas('fld', w, h);
 	cvs.ctx.strokeStyle = 'Gray';
@@ -149,11 +149,11 @@ function raider(w,h,cvs) {
 	cvs.ctx.stroke();
 
 	cvs.ctx.moveTo(2 * unit, unit / 2);
-	cvs.ctx.lineTo(3 * unit, 1.5 * unit );
+	cvs.ctx.lineTo(3 * unit, 1.5 * unit);
 	cvs.ctx.stroke();
 
-	cvs.ctx.moveTo(2 * unit, 2.5*unit +1);
-	cvs.ctx.lineTo(3 * unit, 1.5 * unit );
+	cvs.ctx.moveTo(2 * unit, 2.5 * unit + 1);
+	cvs.ctx.lineTo(3 * unit, 1.5 * unit);
 	cvs.ctx.stroke();
 
 	cvs.ctx.lineWidth = tmp;
@@ -181,13 +181,13 @@ function raider(w,h,cvs) {
 	cvs.ctx.stroke();
 	cvs.ctx.fill();
 
-	
-	var grd = cvs.ctx.createLinearGradient(0,1.33*unit,0,1.66*unit);
-	grd.addColorStop(0,'Black');
-	grd.addColorStop(0.5,'White');
-	grd.addColorStop(1,'Black');
-	
-	cvs.rect(0,1.33*unit,unit,0.33*unit,'White',grd);
+
+	var grd = cvs.ctx.createLinearGradient(0, 1.33 * unit, 0, 1.66 * unit);
+	grd.addColorStop(0, 'Black');
+	grd.addColorStop(0.5, 'White');
+	grd.addColorStop(1, 'Black');
+
+	cvs.rect(0, 1.33 * unit, unit, 0.33 * unit, 'White', grd);
     }
 
 
@@ -200,14 +200,14 @@ function warbird(w,h,cvs) {
 	cvs.roundRect(unit, 2 * unit, 2 * unit, 3 * unit, unit / 5, 'White', 'Black');
 	cvs.roundRect(2 * unit, 3 * unit, 2 * unit, unit, unit / 10, 'Gray', 'Black');
 	cvs.rect(4 * unit, 3.33 * unit, unit, 0.33 * unit, 'Black', 'White');
-	
-	var grd = cvs.ctx.createLinearGradient(0,3.33*unit,0,3.66*unit);
-	grd.addColorStop(0,'White');
-	grd.addColorStop(0.5,'Black');
-	grd.addColorStop(1,'White');
+
+	var grd = cvs.ctx.createLinearGradient(0, 3.33 * unit, 0, 3.66 * unit);
+	grd.addColorStop(0, 'White');
+	grd.addColorStop(0.5, 'Black');
+	grd.addColorStop(1, 'White');
 	cvs.ctx.fillStyle = grd;
 	cvs.ctx.fill();
-	
+
 
 	cvs.ctx.fillStyle = 'Gray';
 
@@ -231,11 +231,11 @@ function warbird(w,h,cvs) {
 
 	cvs.ctx.fill();
 	cvs.ctx.stroke();
-	
+
     }
 
 function rat(w,h,cvs) {
-	
+
 	var unit = w / 7;
 
 	var ctx = cvs.ctx;
@@ -268,107 +268,137 @@ function rat(w,h,cvs) {
 	ctx.stroke();
 	ctx.fill();
     }
-    
-    
+
+
 function line(x1,y1,x2,y2,level) {
-    var x3 = getRandomInt(x1,x2);
-    var y3 = getRandomInt(y1,y2);
-    if(level == 0) {
-	return [ {x:x1,y:y1},{x:x3,y:y3},{x:x2,y:y2}  ];
+	var x3 = getRandomInt(x1, x2);
+	var y3 = getRandomInt(y1, y2);
+	if(level == 0) {
+		return [ {x:x1,y:y1},{x:x3,y:y3},{x:x2,y:y2}  ];
+	    }
+
+	return line(x1, y1, x3, y3, level - 1).concat([{x:x3,y:y3}]).concat(line(x3, y3, x2, y2, level - 1));
     }
-    
-   return line(x1,y1,x3,y3,level-1).concat([{x:x3,y:y3}]).concat(line(x3,y3,x2,y2,level-1));
-}
 
 
 function rock(w,h,cvs) {
-    
-    var x1 = getRandomInt(0,w);
-    var y1 = 0;
-    
-    var x2 = 0;
-    var y2 = getRandomInt(0,h);
-    
-    var x3 = getRandomInt(0,w);
-    var y3 = h;
-    
-    var x4 = w;
-    var y4 = getRandomInt(0,h);
-    
-    var maxLevel = 1;
-    
-    cvs.ctx.beginPath();
-    
-    var output = line(x1,y1,x2,y2,maxLevel).concat(
-                 line(x2,y2,x3,y3,maxLevel)).concat(
-                 line(x3,y3,x4,y4,maxLevel)).concat(
-                 line(x4,y4,x1,y1,maxLevel));
-		 
-   cvs.ctx.moveTo(output[0].x,output[0].y);
-   
-   var len = output.length;
-   
-   for(i=1;i<len;i++) {
-       cvs.ctx.lineTo(output[i].x,output[i].y);
-   }
-   
-   cvs.ctx.closePath();
-   cvs.ctx.lineWidth =w/3;
-   
-   cvs.ctx.strokeStyle = 'rgb(130,95,73)';
-   cvs.ctx.stroke();
-   cvs.ctx.fillStyle = 'rgb(153,111,86)';
-   cvs.ctx.fill();
-   
- }
- 
- 
- function powerUp(w,h,cvs,content) {
 
-  //  cvs.rect(0,0,w,h,'Red','White');
-  var unit = h/18;
-  
-  //cvs.rect(w/2-7,h/2,15,5,'Yellow','Green');
- //cvs.text('LIFE',w/2-20,h/2+5,'Red','20px bold');
- cvs.ctx.save();
- /*cvs.ctx.translate(w/2-unit,8*unit);
- bullet(null,unit,cvs.ctx);*/
- cvs.ctx.textAlign = 'center';
- cvs.text(content.charAt(0),w/2,0.67*h,'Green','bold '+w*0.4+'px arial');
- 
- 
- 
-   var grd = cvs.ctx.createLinearGradient(unit,0,w-unit,0);
-    grd.addColorStop(0,"white");
-    grd.addColorStop(0.2,"rgba(255,255,255,0.3)");
-    grd.addColorStop(0.5,"rgba(255,255,255,0)");
-    grd.addColorStop(0.8,"rgba(255,255,255,0.3)");
-    grd.addColorStop(1,"white");
-   
-  cvs.rect(unit,4*unit,w-2*unit,10*unit,'White',grd);
-  
-  grd = cvs.ctx.createLinearGradient(0,0,0,2*unit);
-    grd.addColorStop(0,"Gray");
-    grd.addColorStop(0.5,"Gold");
-    grd.addColorStop(1,"Gray");
-  //  grd = 'Gold';
-  cvs.roundRect(0,0,w,2*unit,unit,grd,'Black');
- // grd = 'Gold';
-  grd = cvs.ctx.createLinearGradient(0,3*unit,0,5*unit);
-    grd.addColorStop(0,"Gray");
-    grd.addColorStop(0.5,"Gold");
-    grd.addColorStop(1,"Gray");
-  cvs.roundRect(0,3*unit,w,2*unit,unit,grd,'Black');
-  grd = cvs.ctx.createLinearGradient(0,13*unit,0,15*unit);
-    grd.addColorStop(0,"Gray");
-    grd.addColorStop(0.5,"Gold");
-    grd.addColorStop(1,"Gray");
-  cvs.roundRect(0,13*unit,w,2*unit,unit,grd,'Black');
-  grd = cvs.ctx.createLinearGradient(0,h-2*unit,0,h);
-    grd.addColorStop(0,"Gray");
-    grd.addColorStop(0.5,"Gold");
-    grd.addColorStop(1,"Gray");
-  cvs.roundRect(0,h-2*unit,w,2*unit,unit,grd,'Black');
-  
-    cvs.ctx.restore();
-}
+	var x1 = getRandomInt(0, w);
+	var y1 = 0;
+
+	var x2 = 0;
+	var y2 = getRandomInt(0, h);
+
+	var x3 = getRandomInt(0, w);
+	var y3 = h;
+
+	var x4 = w;
+	var y4 = getRandomInt(0, h);
+
+	var maxLevel = 1;
+
+	cvs.ctx.beginPath();
+
+	var output = line(x1, y1, x2, y2, maxLevel).concat(
+	line(x2, y2, x3, y3, maxLevel)).concat(
+	line(x3, y3, x4, y4, maxLevel)).concat(
+	line(x4, y4, x1, y1, maxLevel));
+
+	cvs.ctx.moveTo(output[0].x, output[0].y);
+
+	var len = output.length;
+
+	for(i = 1;i < len;i++) {
+		cvs.ctx.lineTo(output[i].x, output[i].y);
+	    }
+
+	cvs.ctx.closePath();
+	cvs.ctx.lineWidth = w / 3;
+
+	cvs.ctx.strokeStyle = 'rgb(130,95,73)';
+	cvs.ctx.stroke();
+	cvs.ctx.fillStyle = 'rgb(153,111,86)';
+	cvs.ctx.fill();
+
+    }
+
+
+function powerUp2(w,h,cvs,type) {
+	powerupSpriteMaker[type](0.2 * w, 0.2 * w, 0.6 * w, 0.6 * w, cvs);
+	var grd = cvs.ctx.createRadialGradient(w / 2, w / 2, w / 4, w / 2, w / 2, w / 2);
+	grd.addColorStop(0, 'rgba(0,0,0,0.2)');
+	grd.addColorStop(1, 'rgba(0,255,255,1)');
+	cvs.circle(w / 2, w / 2, w / 2,'White',grd);
+    }
+
+function twingunSprite(startx,starty,w,h,cvs) {
+        var ctx = cvs.ctx;
+	ctx.save();
+	ctx.translate(startx, starty);
+	cvs.rect(0, 0.15 * h, 0.9 * w, 0.1 * h,'Gray','DarkGray');
+	cvs.rect(0, 0.75 * h, 0.9 * w, 0.1 * h,'Gray','DarkGray');
+
+	cvs.roundRect(0.8 * w, 0.65 * h, 0.2 * w, 0.3 * h, h * 0.05, 'Red');
+	cvs.roundRect(0.8 * w, 0.05 * h, 0.2 * w, 0.3 * h, h * 0.05, 'Red');
+	cvs.roundRect(0, 0, w / 3, h, 0.2 * h, 'Gray');
+	ctx.restore();
+    }
+
+
+
+function oneshotSprite(startx,starty,w,h,cvs) {
+        var ctx = cvs.ctx;
+	ctx.save();
+	ctx.translate(startx, starty);
+	cvs.rect(0, 0.4 * h, 0.9 * w, 0.2 * h,'Gray','DarkGray');
+	
+	cvs.roundRect(0, 0, w / 3, h, 0.2 * h, 'Gray');
+	var grd = cvs.ctx.createLinearGradient(0, 0.25 * h, 0, 0.75 * h);
+	grd.addColorStop(0, 'rgba(255,255,255,1)');
+	grd.addColorStop(0.5, 'rgba(0,255,0,0.3)');
+	grd.addColorStop(1, 'rgba(255,255,255,1)');
+	cvs.roundRect( 0.7 * w, 0.3 * h, 0.3 * w, 0.4 * h, h * 0.25, grd);
+	ctx.restore();
+    }
+
+function threeshotSprite(startx,starty,w,h,cvs) {
+	twingunSprite(startx, starty, w, h, cvs);
+	oneshotSprite(startx + 0.2 * w, starty + 0.3 * h, 0.6 * w, 0.4 * h, cvs);
+    }
+function healthSprite(startx,starty,w,h,cvs) {
+        var ctx = cvs.ctx;
+	ctx.save();
+	ctx.translate(startx, starty);
+	cvs.rect(0.2 * w, 0.4 * h, 0.6 * w, 0.2 * h,'Red','Red');
+	cvs.rect(0.4 * w, 0.2 * h, 0.2 * w, 0.6 * h,'Red','Red');
+	ctx.restore();
+    }
+
+function shieldSprite(startx,starty,w,h,cvs) {
+        var ctx = cvs.ctx;
+	ctx.save();
+	ctx.translate(startx, starty);
+	ctx.moveTo(w / 2, h);
+	ctx.quadraticCurveTo(0, h * 0.75, 0, 0.1 * h);
+	ctx.quadraticCurveTo(0.25 * w, 0.5 * h, w / 2, 0);
+	ctx.moveTo(w / 2, h);
+	ctx.quadraticCurveTo(w, h * 0.75, w, 0.1 * h);
+	ctx.quadraticCurveTo(0.75 * w, 0.5 * h, w / 2, 0);
+	ctx.fillStyle = 'Gold';
+	ctx.fill();
+	ctx.restore();
+
+    }
+    
+    
+ function homerSprite(startx,starty,w,h,cvs) {
+        var ctx = cvs.ctx;
+	ctx.save();
+	ctx.translate(startx, starty);
+	var grd = ctx.createRadialGradient(w/2, h / 2, w/ 3, w/2, h / 2, w/2);
+	grd.addColorStop(0, "red");
+	grd.addColorStop(1, "gray");
+	cvs.circle(w/2, h / 2, w / 2, 'White',grd);
+	ctx.restore();
+
+    }
