@@ -39,8 +39,6 @@ function oneshot(ship) {
     }
 
 function threeshot(ship) {
-
-		
 	return oneshot(ship).concat(twingun(ship));
     }
 
