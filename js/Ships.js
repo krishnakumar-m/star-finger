@@ -33,6 +33,8 @@ function Ship(loc,vel,w,h,life) {
 	this.isPlayer = true;
 	this.setWeapon('twingun');
 	this.shipType = 'crosswing';
+	this.shield = false;
+	this.shieldHealth = 0;
     }
 
 Ship.prototype.show = function() {
@@ -40,8 +42,8 @@ Ship.prototype.show = function() {
 };
 Ship.prototype.setWeapon = function(weaponId) {
     this.weapon = weaponId;
-    this.fireWeapon = weapons[this.weapon].fire;
-    this.reload = weapons[this.weapon].reload;
+    this.fireWeapon = weapons[weaponId].fire;
+    this.reload = weapons[weaponId].reload;
 };
 Ship.prototype.tryWeapon = function() {
     this.counter = (this.counter + 1) % this.reload;
@@ -62,14 +64,6 @@ function EnemyShip(loc,vel,w,h,life) {
 	
     }
 EnemyShip.prototype.move = function() {
-	/*var temp = this.loc;
-	do {
-		var dx = -1;
-		var dy = Math.round(Math.random() * 2) - 1;
-		temp.add(new Point(dx, dy));
-
-	    }while(temp.y < 0 || temp.y + this.w > space.width);
-	this.loc = temp;*/
 	this.loc.add(this.vel);
 	var bllts = this.tryWeapon();
 	if(bllts) {
