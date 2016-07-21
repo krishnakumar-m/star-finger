@@ -1,7 +1,15 @@
-// y relative position on y axis
 var shipList = ['crosswing','mouse','raider','warbird','rat'];
-//var shipList = ['crosswing','warbird'];
-var powerupsList = ['oneshot','health','homer','twingun','3shot'];
+//var powerupsList = ['oneshot','health','homer','twingun','3shot','shield'];
+var powerupSpriteMaker = {
+    'shield': shieldSprite,
+    'oneshot':oneshotSprite,
+    'twingun':twingunSprite,
+    'health': healthSprite,
+    '3shot':threeshotSprite,
+    'homer': homerSprite
+};
+
+
 var ships = {
     'crosswing' : {
 	w : 48,
@@ -44,7 +52,6 @@ var sprites = {};
 var debrisTime = getRandomInt(200,400);
 function preLoadShipSprites() {
     var len = shipList.length;
-    
     for(var i=0;i<len;i++) {
 	var thisShipType = shipList[i];
 	ships[thisShipType].sprite = getSprites(thisShipType);
@@ -54,7 +61,7 @@ function preLoadShipSprites() {
 function getSprites(id) {
     var w = ships[id].w;
     var h = ships[id].h;
-    var cvs = new Canvas('fld', w, h);
+    var cvs = new Canvas('temp', w, h);
     
     ships[id].spriteMaker(w,h,cvs);
     
@@ -79,13 +86,16 @@ function debrisImage(x) {
 
 function preloadPowerSprites() {
     
+    var powerupsList = Object.keys(powerupSpriteMaker);
+    
     var len = powerupsList.length;
-    var cvs = new Canvas('fld',25, 30);
+    var cvs = new Canvas('temp',40, 40);
+    
     for(var i=0;i<len;i++) {
-	var thisPower = powerupsList[i];
 	
+	var thisPower = powerupsList[i];
 	cvs.clear();
-	powerUp(25,30,cvs,thisPower);
+	powerUp2(40,40,cvs,thisPower);
 	var img = new Image();
         img.src = cvs.cvs.toDataURL('img/png');
 	
@@ -94,104 +104,13 @@ function preloadPowerSprites() {
     
     
 }
-
-var waves = {
-    50 : [ {
-	    y : 0.1,
-	    ship : 'mouse',
-
-	    },{
-	    y : 0.3,
-	    ship : 'mouse'
-	    },
-	    {
-	    y : 0.5,
-	    ship : 'mouse'
-	    },
-	    {
-	    y : 0.7,
-	    ship : 'mouse'
-	    },
-	    {
-	    y : 0.9,
-	    ship : 'mouse'
-	    }
-	],
-    100 :  [{
-	    y : 0.5,
-	    ship : 'raider'
-	    }
-	],
-    125 :  [{
-	    y : 0.3,
-	    ship : 'raider'
-	    },
-	    {
-	    y : 0.7,
-	    ship : 'raider'
-	    }
-	],
-    150 :  [{
-	    y : 0.1,
-	    ship : 'raider'
-	    },
-	    {
-	    y : 0.9,
-	    ship : 'raider'
-	    }
-	],
-    200 : [ {
-	    y : 0.1,
-	    ship : 'rat',
-
-	    },{
-	    y : 0.3,
-	    ship : 'mouse'
-	    },
-	    {
-	    y : 0.5,
-	    ship : 'rat'
-	    },
-	    {
-	    y : 0.7,
-	    ship : 'mouse'
-	    },
-	    {
-	    y : 0.9,
-	    ship : 'rat'
-	    }
-	],
-    250:  [{
-	    y : 0.5,
-	    ship : 'warbird'
-	    }
-	],
-    275 :  [{
-	    y : 0.3,
-	    ship : 'warbird'
-	    },
-	    {
-	    y : 0.7,
-	    ship : 'warbird'
-	    }
-	],
-    300 :  [{
-	    y : 0.1,
-	    ship : 'warbird'
-	    },
-	    {
-	    y : 0.9,
-	    ship : 'warbird'
-	    }
-	]
-
-    };
-
+var waves = {}  ;
 var endless = true;//Endless Random Hell
 var enemies = [], bullets = [], enemyBullets = [], powerUps=[];
-var hs = [0,60,120];
+
 function randomStarBg() {
         var hsl ;
+	var hs = [0,60,120];
 	bg.clear();
 	for(var i=0;i < 100;i++) {
 		hsl = 'hsla(' + hs[getRandomInt(0, 2)] + ',50%,80%,1';
@@ -205,13 +124,16 @@ function randomStarBg() {
 var maxLife = 100;
 
 function lifeMeter() {
-        var w = Math.round(player.life * bg.width / maxLife);
-       bg.rect(0, 0, w, 10, 'red', 'red');
+       var w = Math.round(player.life * bg.width / maxLife);
+       bg.rect(0, 0, w, 5, 'red', 'red');
+       w = Math.round(4*player.shieldHealth * bg.width / maxLife);
+       bg.rect(0, 5, w, 5, 'blue', 'blue');
        
-    //   bg.text(JSON.stringify(enemies),0,100);
+       
     }
 
 function test() {
+    
 	bg = new Canvas('bg', window.innerWidth, window.innerHeight);
 	var bgs = [{
 		id: 'bg',
@@ -238,12 +160,11 @@ function test() {
 	player = new Ship(new Point(0, space.height/2), new Point(0, 0), 48, 40, maxLife);
 	Scenery.init(bgs);
 
-
-
 	var shipControl = false;
 
 	paused = false;
         levelTimer = 0;
+	
 	nextWaveIfEndless();
 	
 	document.body.addEventListener('touchmove', function(event) {
@@ -347,7 +268,13 @@ function movePowerups () {
 		if(collisionCheck(player, powerUps[i])) {
 		        if(powerUps[i].power =='health') {
 			    player.life += Math.round(maxLife/4);
-			} else {
+			    if(player.life>maxLife) {
+				player.life = maxLife;
+			    }
+			} else if(powerUps[i].power =='shield') {
+			    player.shield = true;
+			    player.shieldHealth = Math.round(maxLife/4);
+			}else {
 		            player.setWeapon(powerUps[i].power);
 			}
 			powerUps.splice(i, 1);
@@ -369,7 +296,16 @@ function hitsByEnemy() {
 		    }    
 		else if(collisionCheck(enemyBullets[i], player)) {
 			partSys.add(new ParticleSystem(100, enemyBullets[i].loc.x, enemyBullets[i].loc.y, space.ctx , config, false));
-			player.life -= thisBullet.hp;
+			if(player.shield) {
+			    player.shieldHealth -=thisBullet.hp;
+			    if(player.shieldHealth<=0) {
+				player.shield = false;
+				player.life +=  player.shieldHealth;
+				player.shieldHealth = 0;
+			    }
+			} else {
+			    player.life -= thisBullet.hp;
+			}
 			enemyBullets.splice(i, 1);
 		    }
 	    }
@@ -378,8 +314,6 @@ function hitsByEnemy() {
 function hitEnemy() {
 	var i=enemies.length - 1,thisEnemy,j,myBullet;
 	for(;i >= 0;i--) {
-
-		//enemies[i].move();
 		thisEnemy = enemies[i];
 		thisEnemy.move();
 		thisEnemy.show();
@@ -392,21 +326,20 @@ function hitEnemy() {
 				myBullet = bullets[j];
 				if(collisionCheck(myBullet, thisEnemy)) {
 					partSys.add(new ParticleSystem(10, myBullet.loc.x, myBullet.loc.y, space.ctx , config, false));
-				//	try{
+				
 					thisEnemy.life -= myBullet.hp;
-					/*} catch(e) {
-					    alert(JSON.stringify(enemies));
-					    alert(i);
-					}*/
+					
 					if(thisEnemy.life <= 0) {
 					       var decider = Math.random();
 					        if( decider > 0.5) {
                                                         var thisPowerUp =thisEnemy.weapon;
 							if(decider < 0.6) {
 							    thisPowerUp = 'health';
-							} 
+							}  else if(decider < 0.7) {
+							    thisPowerUp = 'shield';
+							}
 							if(thisPowerUp) {
-							    powerUps.push(new Powerup(thisEnemy.loc, new Point(-1, 0), 20, 30, 10, thisPowerUp));
+							    powerUps.push(new Powerup(thisEnemy.loc, new Point(-1, 0), 40, 40, 10, thisPowerUp));
 							}
 						    }
 						enemies.splice(i, 1);
@@ -423,15 +356,22 @@ function collideEnemy() {
 	var i=enemies.length - 1,thisEnemy,j,myBullet;
 	for(;i >= 0;i--) {
 		if(collisionCheck(player, enemies[i])) {
-		        if(player.life > enemies[i].life) {
-				player.life -= enemies[i].life;
-				if(enemies[i].life <= 0) {
-					enemies.splice(i, 1);
-				    }
+		        var dmg = Math.round(enemies[i].life/2);
+		        if(player.shield) {
+			    player.shieldHealth -= dmg;
+			    if(player.shieldHealth<=0) {
+				player.shield = false;
+				player.life +=  player.shieldHealth;
+				player.shieldHealth = 0;
 			    }
-			else {
-				enemies[i].life -= player.life;
-			    }
+			} else {
+		            player.life -= dmg;
+			}
+			enemies[i].life -= Math.round(player.life/2);
+			if(enemies[i].life <= 0) {
+			    enemies.splice(i, 1);
+		        }
+			
 			partSys.add(new ParticleSystem(10, player.loc.x, player.loc.y, space.ctx , config, false));
 		    }
 	    }
