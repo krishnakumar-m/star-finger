@@ -51,7 +51,9 @@ var sprites = {};
 
 var debrisTime = getRandomInt(200,400);
 function preLoadShipSprites() {
+    
     var len = shipList.length;
+    
     for(var i=0;i<len;i++) {
 	var thisShipType = shipList[i];
 	ships[thisShipType].sprite = getSprites(thisShipType);
@@ -61,14 +63,15 @@ function preLoadShipSprites() {
 function getSprites(id) {
     var w = ships[id].w;
     var h = ships[id].h;
-    var cvs = new Canvas('temp', w, h);
+  /* var cvs = new Canvas('temp', w, h);
     
     ships[id].spriteMaker(w,h,cvs);
     
     var img = new Image();
     img.src = cvs.cvs.toDataURL('img/png');
     
-    return img;
+    return img;*/
+    return shipIt(w,h);
 }
 
 
@@ -124,10 +127,23 @@ function randomStarBg() {
 var maxLife = 100;
 
 function lifeMeter() {
-       var w = Math.round(player.life * bg.width / maxLife);
+      /* var w = Math.round(player.life * bg.width / maxLife);
        bg.rect(0, 0, w, 5, 'red', 'red');
        w = Math.round(4*player.shieldHealth * bg.width / maxLife);
-       bg.rect(0, 5, w, 5, 'blue', 'blue');
+       bg.rect(0, 5, w, 5, 'blue', 'blue');*/
+       
+       var rad = player.life * 2*Math.PI / maxLife;
+       bg.ctx.beginPath();
+       bg.ctx.arc(50,50,20,Math.PI,rad+Math.PI);
+       bg.ctx.strokeStyle = 'Red';
+       bg.ctx.lineWidth= 10;
+       bg.ctx.stroke();
+       bg.text(rad,50,50,'Blue','20px Arial');
+       rad = 4*player.shieldHealth *2* Math.PI / maxLife;
+       bg.ctx.beginPath();
+       bg.ctx.arc(50,50,30,Math.PI,rad+Math.PI);
+       bg.ctx.strokeStyle = 'Blue';
+       bg.ctx.stroke();
        
        
     }
@@ -317,7 +333,7 @@ function hitEnemy() {
 		thisEnemy = enemies[i];
 		thisEnemy.move();
 		thisEnemy.show();
-		if(thisEnemy.loc.x < 0) {
+		if(thisEnemy.loc.x + thisEnemy.w < 0) {
 			enemies.splice(i, 1);
 		    }  
 		else {

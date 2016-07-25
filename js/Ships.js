@@ -52,6 +52,7 @@ Ship.prototype.tryWeapon = function() {
 	    }
 };
 
+var DEG2RAD = Math.PI / 180;
 /*
 Extend all enemy ships from the below class
 */
@@ -62,13 +63,31 @@ function EnemyShip(loc,vel,w,h,life) {
 	this.shipType = 'raider';
 	//this.setWeapon('oneshot');
 	
+	this.movParams = {
+	     A: getRandomInt(-5, -1),
+	     B: getRandomInt(-2, 2),
+	     C: getRandomInt(-5, 5),
+	     D: getRandomInt(-5, 5),
+	     E: getRandomInt(-2, 2),
+	     F: getRandomInt(-2, 2),
+	     G: getRandomInt(-5, 5),
+	     H: getRandomInt(-5, 5)
+	
+	};
+	this.t = 0;
+	
     }
 EnemyShip.prototype.move = function() {
+        this.vel.x = this.movParams.A + this.movParams.B * Math.sin((this.movParams.C * this.t + this.movParams.D) * DEG2RAD);
+	this.vel.y = this.movParams.E + this.movParams.F * Math.sin((this.movParams.G * this.t + this.movParams.H) * DEG2RAD);
+        
 	this.loc.add(this.vel);
+	
 	var bllts = this.tryWeapon();
 	if(bllts) {
 	   enemyBullets = enemyBullets.concat(bllts);
 	}
+	this.t++;
     };
     
 /*
