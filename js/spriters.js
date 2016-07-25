@@ -402,3 +402,165 @@ function shieldSprite(startx,starty,w,h,cvs) {
 	ctx.restore();
 
     }
+    
+    
+function wing(w,h,minparts,maxparts) {
+	var cvs = document.createElement('canvas');
+	var ctx = cvs.getContext('2d');
+
+	cvs.width = w;
+	cvs.height = h;
+
+	var nBlocks = getRandomInt(minparts || 2, maxparts || 4);
+
+	var unitH = h / nBlocks;
+
+	x1 = getRandomInt(0, w / 2);
+	x2 = getRandomInt(x1 + 1, w);
+	h1 = 0;
+
+	var grdflag = true;
+	var grdColor = {
+	    'true' : 'White',
+	    'false' : 'Gray'
+	    };
+	for(i = 0; i < nBlocks; i++, h1 += unitH) {
+
+		x3 = getRandomInt(0, w / 2);
+		x4 = getRandomInt(x3 + 1, w);
+		ctx.beginPath();
+		ctx.moveTo(x1, h1);
+		ctx.lineTo(x2, h1);
+		ctx.lineTo(x4, h1 + unitH);
+		ctx.lineTo(x3, h1 + unitH);
+		ctx.closePath();
+		var grd = ctx.createLinearGradient(0, h1, 0, h1 + unitH);
+		grd.addColorStop(0, grdColor[grdflag]);
+		grd.addColorStop(1, grdColor[!grdflag]);
+		ctx.fillStyle = grd;// 'Red';
+
+		ctx.fill();
+		ctx.stroke();
+		x1 = x3;
+		x2 = x4;
+		grdflag = !grdflag;
+	    }
+	arr = fuselage(w, h, getRandomInt(0.75 * w, w), getRandomInt(0.3 * h, 0.5 * h), ctx);
+	// alert(arr);
+	tail(w / 4, arr[4], 1, 1, ctx, arr[1]);
+
+	return cvs;
+    }
+
+
+function shipIt(w,h) {
+
+	var img = new Image();
+
+	img.src = wing(w, h / 2, 2, 4).toDataURL('image/png');
+
+	var cvs1 = document.createElement('canvas');
+	var ctx1 = cvs1.getContext('2d');
+
+	cvs1.width = w;
+	cvs1.height = h;
+	ctx1.drawImage(img, 0, h / 2);
+	ctx1.save();
+	ctx1.translate(0, h / 2);
+	ctx1.scale(1, -1);
+	ctx1.drawImage(img, 0, 0);
+	ctx1.restore();
+	var img1 =new Image();
+	img1.src = cvs1.toDataURL('image/png');
+	return img1;
+
+    }
+
+function tail(w,h,minparts,maxparts,ctx,x) {
+	ctx.save();
+	ctx.translate(x, 0);
+	var nBlocks = getRandomInt(minparts || 2, maxparts || 4);
+
+	var unitH = h / nBlocks;
+	x1 = getRandomInt(0, w / 2);
+	x2 = getRandomInt(x1 + 1, w);
+	h1 = 0;
+
+	/*  var grdflag = true;
+	 var grdColor = {
+	 true : 'Orange',
+	 false : 'Gray'
+	 };*/
+
+	for(i = 0; i < nBlocks; i++, h1 += unitH) {
+
+		x3 = getRandomInt(0, w / 2);
+		x4 = getRandomInt(x3 + 1, w);
+		ctx.beginPath();
+		ctx.moveTo(x1, h1);
+		ctx.lineTo(x2, h1);
+		ctx.lineTo(x4, h1 + unitH);
+		ctx.lineTo(x3, h1 + unitH);
+		ctx.closePath();
+		/*var grd = ctx.createLinearGradient(0,h1,0,unitH);
+		 grd.addColorStop(0,grdColor[grdflag]);
+		 grd.addColorStop(1,grdColor[!grdflag]);*/
+		ctx.fillStyle = 'DarkGray';
+
+		ctx.fill();
+		ctx.stroke();
+		x1 = x3;
+		x2 = x4;
+	    }
+	ctx.restore();
+    }
+
+
+function fuselage(totalw,totalh,w,h,ctx) {
+var fuseLageColors = ['Orange','Red','Green','Blue'];
+
+	/*ctx.save();
+	 ctx.translate(0,totalh);*/
+	x1 = getRandomInt(0, totalw - w);
+	//x2 = getRandomInt(x1+1,w)
+	x2 = w;
+	x3 = getRandomInt(0, w / 2);
+	x4 = getRandomInt(x3 + 1, w);
+	ctx.beginPath();
+	ctx.moveTo(x1, 0);
+	ctx.lineTo(x2, 0);
+	ctx.lineTo(x4, h / 2);
+	ctx.lineTo(x3, h / 2);
+	ctx.closePath();
+	ctx.fillStyle = fuseLageColors[getRandomInt(0, 3)];
+	ctx.strokeStyle = 'Black';
+	ctx.fill();
+	ctx.stroke();
+	cockpit(x1, x2, x3, x4, h, ctx);
+	return [x1, x2, x3, x4, h];
+	//ctx.restore();
+    }
+
+function cockpit(x1,x2,x3,x4,h,ctx) {
+
+	var w1 = x2 - x1;
+	// nx1 = getRandomInt(x1 + 1, x2 / 2 - 1);
+	nx1 = x1 + 5;
+	nx2 = getRandomInt(x2 / 2 + 1, x2 - 1);
+	// nx2 = nx1 + w1/2;
+	// nx3 = getRandomInt(x3 + 1, x4 / 2 - 1);
+	nx3 = x3 + 5;
+	nx4 = getRandomInt(x4 / 2 + 1, x4 - 1);
+	//nx4 = nx3 + (x4-x3)/2;
+	ctx.beginPath();
+	ctx.moveTo(nx1, 0);
+	ctx.lineTo(nx2, 0);
+	ctx.lineTo(nx4, h / 4);
+	ctx.lineTo(nx3, h / 4);
+	ctx.closePath();
+	ctx.fillStyle = 'Silver';
+
+	ctx.fill();ctx.stroke();
+
+    }
+
