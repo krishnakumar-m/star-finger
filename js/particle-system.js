@@ -30,6 +30,19 @@ function Point(x,y) {
 		this.x += point.x;
 		this.y += point.y;
 	    };
+	    
+	this.sub = function(point) {
+		this.x -= point.x;
+		this.y -= point.y;
+	    };
+	    
+	this.norm = function() {
+	   var dist =  Math.sqrt(this.x*this.x + this.y*this.y);
+	   if(dist == 0) {
+	       return new Point(0,0);
+	   }
+	   return new Point(this.x/dist,this.y/dist);
+	};
     }
 
 

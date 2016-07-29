@@ -7,7 +7,7 @@ var powerupSpriteMaker = {
     'health': healthSprite,
     '3shot':threeshotSprite,
     'homer': homerSprite
-};
+    };
 
 
 var ships = {
@@ -20,7 +20,7 @@ var ships = {
 	},
     'mouse' : {
 	w : 30,
-	h : 12,
+	h : 20,
 	hp : 5,
 	vel : new Point(-4, 0),
 	spriteMaker : mouse
@@ -41,7 +41,7 @@ var ships = {
 	},
     'rat' : {
 	w : 20,
-	h : 20,
+	h : 30,
 	hp : 10,
 	vel : new Point(-4, 0),
 	spriteMaker : rat
@@ -49,75 +49,77 @@ var ships = {
     };
 var sprites = {};
 
-var debrisTime = getRandomInt(200,400);
+var debrisTime = getRandomInt(200, 400);
 function preLoadShipSprites() {
-    
-    var len = shipList.length;
-    
-    for(var i=0;i<len;i++) {
-	var thisShipType = shipList[i];
-	ships[thisShipType].sprite = getSprites(thisShipType);
+
+	/*var len = shipList.length;
+
+	for(var i=0;i < len;i++) {
+		var thisShipType = shipList[i];
+		ships[thisShipType].sprite = getSprites(thisShipType);
+	    }*/
+	    playerSprite = getSprites('crosswing');
     }
-}
 
 function getSprites(id) {
-    var w = ships[id].w;
-    var h = ships[id].h;
-  /* var cvs = new Canvas('temp', w, h);
-    
-    ships[id].spriteMaker(w,h,cvs);
-    
-    var img = new Image();
-    img.src = cvs.cvs.toDataURL('img/png');
-    
-    return img;*/
-    return shipIt(w,h);
-}
+	var w = ships[id].w;
+	var h = ships[id].h;
+	var cvs = new Canvas('temp', w, h);
+
+	 ships[id].spriteMaker(w,h,cvs);
+
+	 var img = new Image();
+	 img.src = cvs.cvs.toDataURL('img/png');
+
+	 return img;
+	//return shipIt(w, h);
+    }
 
 
 function debrisImage(x) {
-    var cvs = new Canvas('temp', x, x);
-    
-    rock(x,x,cvs);
-    
-    var img = new Image();
-    img.src = cvs.cvs.toDataURL('img/png');
-    
-    return img;
-}
+	var cvs = new Canvas('temp', x, x);
+
+	rock(x, x, cvs);
+
+	var img = new Image();
+	img.src = cvs.cvs.toDataURL('img/png');
+
+	return img;
+    }
 
 
 function preloadPowerSprites() {
-    
-    var powerupsList = Object.keys(powerupSpriteMaker);
-    
-    var len = powerupsList.length;
-    var cvs = new Canvas('temp',40, 40);
-    
-    for(var i=0;i<len;i++) {
-	
-	var thisPower = powerupsList[i];
-	cvs.clear();
-	powerUp2(40,40,cvs,thisPower);
-	var img = new Image();
-        img.src = cvs.cvs.toDataURL('img/png');
-	
-	sprites[thisPower] = img;
+
+	var powerupsList = Object.keys(powerupSpriteMaker);
+
+	var len = powerupsList.length;
+	var cvs = new Canvas('temp', 40, 40);
+
+	for(var i=0;i < len;i++) {
+
+		var thisPower = powerupsList[i];
+		cvs.clear();
+		powerUp2(40, 40, cvs, thisPower);
+		var img = new Image();
+		img.src = cvs.cvs.toDataURL('img/png');
+
+		sprites[thisPower] = img;
+	    }
+
+
     }
-    
-    
-}
 var waves = {}  ;
 var endless = true;//Endless Random Hell
 var enemies = [], bullets = [], enemyBullets = [], powerUps=[];
 
-function randomStarBg() {
+function randomStarBg(x) {
         var hsl ;
-	var hs = [0,60,120];
+	var hs = [0,60,240];
 	bg.clear();
-	for(var i=0;i < 100;i++) {
-		hsl = 'hsla(' + hs[getRandomInt(0, 2)] + ',50%,80%,1';
-		bg.circle(bg.width * Math.random(), bg.height * Math.random(), 1.2 * Math.random(), hsl, hsl);
+	for(var i=0;i < 200;i++) {
+	        var sat = getRandomInt(50, 100);
+		hsl = 'hsla(' + hs[getRandomInt(0, 2)] + ',' + sat + '%,88%,1';
+		bg.circle(bg.width * Math.random(), bg.height * Math.random(), x * Math.random(), hsl, hsl);
 	    }
 	return bg.cvs.toDataURL();
     }
@@ -127,66 +129,68 @@ function randomStarBg() {
 var maxLife = 100;
 
 function lifeMeter() {
-      /* var w = Math.round(player.life * bg.width / maxLife);
-       bg.rect(0, 0, w, 5, 'red', 'red');
-       w = Math.round(4*player.shieldHealth * bg.width / maxLife);
-       bg.rect(0, 5, w, 5, 'blue', 'blue');*/
-       
-       var rad = player.life * 2*Math.PI / maxLife;
-       bg.ctx.beginPath();
-       bg.ctx.arc(50,50,20,Math.PI,rad+Math.PI);
-       bg.ctx.strokeStyle = 'Red';
-       bg.ctx.lineWidth= 10;
-       bg.ctx.stroke();
-       bg.text(rad,50,50,'Blue','20px Arial');
-       rad = 4*player.shieldHealth *2* Math.PI / maxLife;
-       bg.ctx.beginPath();
-       bg.ctx.arc(50,50,30,Math.PI,rad+Math.PI);
-       bg.ctx.strokeStyle = 'Blue';
-       bg.ctx.stroke();
-       
-       
+	/* var w = Math.round(player.life * bg.width / maxLife);
+	 bg.rect(0, 0, w, 5, 'red', 'red');
+	 w = Math.round(4*player.shieldHealth * bg.width / maxLife);
+	 bg.rect(0, 5, w, 5, 'blue', 'blue');*/
+
+	var startAngle = -Math.PI / 2;
+
+	var rad = player.life * 2 * Math.PI / maxLife;
+	bg.ctx.lineCap = 'round';
+	bg.ctx.beginPath();
+	bg.ctx.arc(50, 50, 20, startAngle, rad + startAngle);
+	bg.ctx.strokeStyle = 'Red';
+	bg.ctx.lineWidth = 10;
+	bg.ctx.stroke();
+	rad = 4 * player.shieldHealth * 2 * Math.PI / maxLife;
+	bg.ctx.beginPath();
+	bg.ctx.arc(50, 50, 30, startAngle, rad + startAngle);
+	bg.ctx.strokeStyle = 'Blue';
+	bg.ctx.stroke();
+
+
     }
 
 function test() {
-    
+
 	bg = new Canvas('bg', window.innerWidth, window.innerHeight);
 	var bgs = [{
 		id: 'bg',
-		speed: 1,
-		src: randomStarBg()
-	       }
-	       ];
-
-	
-	/* , {
-	 id: 'bg1',
-	 speed: 2,
-	 src: randomStarBg()
-	 }, {
+		speed: 2,
+		src: randomStarBg(0.2)
+		}, {
+		id: 'bg1',
+		speed: 3,
+		src: randomStarBg(1.2)
+		}];
+	/*, {
 	 id: 'bg2',
 	 speed: 3,
 	 src: randomStarBg()
 	 }];*/
-	 
+
 	preLoadShipSprites();
 	preloadPowerSprites();
+	ships = generateShipTypes(1);
+	
+	//alert(ships[i].sprite.src);
 	space = new Canvas('fld', window.innerWidth, window.innerHeight);
 
-	player = new Ship(new Point(0, space.height/2), new Point(0, 0), 48, 40, maxLife);
+	player = new Ship(new Point(0, space.height / 2), new Point(0, 0), 48, 40, maxLife);
 	Scenery.init(bgs);
 
 	var shipControl = false;
 
 	paused = false;
         levelTimer = 0;
-	
-	nextWaveIfEndless();
-	
+
+	nextWaveIfEndless2();
+
 	document.body.addEventListener('touchmove', function(event) {
 		event.preventDefault();
 	    }, false);
-	
+
 	space.cvs.ontouchstart = function() {
 		var x = event.touches[0].pageX;
 		var y = event.touches[0].pageY;
@@ -240,10 +244,10 @@ function test() {
 
 function game() {
 	space.clear();
-	newShips();
+	newShips2();
 	debrisMaker();
 	player.show();
-
+       // space.ctx.drawImage(ships[0].sprite,0,0);
 	for(i = bullets.length - 1; i >= 0;i--) {
 		bullets[i].move();
 		bullets[i].show();
@@ -282,20 +286,22 @@ function movePowerups () {
 	        powerUps[i].move();
 		powerUps[i].show();
 		if(collisionCheck(player, powerUps[i])) {
-		        if(powerUps[i].power =='health') {
-			    player.life += Math.round(maxLife/4);
-			    if(player.life>maxLife) {
-				player.life = maxLife;
+		        if(powerUps[i].power == 'health') {
+				player.life += Math.round(maxLife / 4);
+				if(player.life > maxLife) {
+					player.life = maxLife;
+				    }
 			    }
-			} else if(powerUps[i].power =='shield') {
-			    player.shield = true;
-			    player.shieldHealth = Math.round(maxLife/4);
-			}else {
-		            player.setWeapon(powerUps[i].power);
-			}
+			else if(powerUps[i].power == 'shield') {
+				player.shield = true;
+				player.shieldHealth = Math.round(maxLife / 4);
+			    }
+			else {
+				player.setWeapon(powerUps[i].power);
+			    }
 			powerUps.splice(i, 1);
 		    }
-		else if(powerUps[i].loc.x < 0) {
+		else if((powerUps[i].loc.x + powerUps[i].w)  < 0) {
 			powerUps.splice(i, 1);
 		    }
 	    }
@@ -313,15 +319,16 @@ function hitsByEnemy() {
 		else if(collisionCheck(enemyBullets[i], player)) {
 			partSys.add(new ParticleSystem(100, enemyBullets[i].loc.x, enemyBullets[i].loc.y, space.ctx , config, false));
 			if(player.shield) {
-			    player.shieldHealth -=thisBullet.hp;
-			    if(player.shieldHealth<=0) {
-				player.shield = false;
-				player.life +=  player.shieldHealth;
-				player.shieldHealth = 0;
+				player.shieldHealth -= thisBullet.hp;
+				if(player.shieldHealth <= 0) {
+					player.shield = false;
+					player.life +=  player.shieldHealth;
+					player.shieldHealth = 0;
+				    }
 			    }
-			} else {
-			    player.life -= thisBullet.hp;
-			}
+			else {
+				player.life -= thisBullet.hp;
+			    }
 			enemyBullets.splice(i, 1);
 		    }
 	    }
@@ -342,21 +349,22 @@ function hitEnemy() {
 				myBullet = bullets[j];
 				if(collisionCheck(myBullet, thisEnemy)) {
 					partSys.add(new ParticleSystem(10, myBullet.loc.x, myBullet.loc.y, space.ctx , config, false));
-				
+
 					thisEnemy.life -= myBullet.hp;
-					
+
 					if(thisEnemy.life <= 0) {
-					       var decider = Math.random();
-					        if( decider > 0.5) {
+						var decider = Math.random();
+					        if(decider > 0.5) {
                                                         var thisPowerUp =thisEnemy.weapon;
 							if(decider < 0.6) {
-							    thisPowerUp = 'health';
-							}  else if(decider < 0.7) {
-							    thisPowerUp = 'shield';
-							}
+								thisPowerUp = 'health';
+							    }
+							else if(decider < 0.7) {
+								thisPowerUp = 'shield';
+							    }
 							if(thisPowerUp) {
-							    powerUps.push(new Powerup(thisEnemy.loc, new Point(-1, 0), 40, 40, 10, thisPowerUp));
-							}
+								powerUps.push(new Powerup(thisEnemy.loc, new Point(-1, 0), 40, 40, 10, thisPowerUp));
+							    }
 						    }
 						enemies.splice(i, 1);
 					    }
@@ -372,22 +380,23 @@ function collideEnemy() {
 	var i=enemies.length - 1,thisEnemy,j,myBullet;
 	for(;i >= 0;i--) {
 		if(collisionCheck(player, enemies[i])) {
-		        var dmg = Math.round(enemies[i].life/2);
+		        var dmg = Math.round(enemies[i].life / 2);
 		        if(player.shield) {
-			    player.shieldHealth -= dmg;
-			    if(player.shieldHealth<=0) {
-				player.shield = false;
-				player.life +=  player.shieldHealth;
-				player.shieldHealth = 0;
+				player.shieldHealth -= dmg;
+				if(player.shieldHealth <= 0) {
+					player.shield = false;
+					player.life +=  player.shieldHealth;
+					player.shieldHealth = 0;
+				    }
 			    }
-			} else {
-		            player.life -= dmg;
-			}
-			enemies[i].life -= Math.round(player.life/2);
+			else {
+				player.life -= dmg;
+			    }
+			enemies[i].life -= Math.round(player.life / 2);
 			if(enemies[i].life <= 0) {
-			    enemies.splice(i, 1);
-		        }
-			
+				enemies.splice(i, 1);
+			    }
+
 			partSys.add(new ParticleSystem(10, player.loc.x, player.loc.y, space.ctx , config, false));
 		    }
 	    }
@@ -454,7 +463,7 @@ function nextWaveIfEndless() {
 		var nextTime = levelTimer + getRandomInt(100, 200);
 		var nextWave = [], shipObj;
 		var nShips = getRandomInt(1, 5);
-               
+
 		var interval = 1 / (nShips + 1);
 		var nAvailShips = shipList.length;
 		for(i = 1;i <= nShips;i++) {
@@ -467,14 +476,178 @@ function nextWaveIfEndless() {
 	    }
     } 
     
+/************/
+
+function newShips2() {
+	var thisWave = waves[levelTimer],i;
+	if(thisWave) {
+		var len = thisWave.length;
+		for(i = 0;i < len;i++) {
+			var params = thisWave[i];
+		        var shipType = params.ship;
+			 params = ships[shipType];
+			params.loc = new Point(space.width, Math.round(space.height * thisWave[i].y));
+			enemies.push(new CustomShip(params));
+		    }
+		nextWaveIfEndless2();  
+	    }
+    }
+
+function nextWaveIfEndless2() {
+	if(endless) {
+		waves = {};
+		var nextTime = levelTimer + getRandomInt(100, 200);
+		var nextWave = [], shipObj;
+		var nShips = getRandomInt(1, 5);
+
+		var interval = 1 / (nShips + 1);
+		var nAvailShips = shipList.length;
+		for(i = 1;i <= nShips;i++) {
+			shipObj = {};
+			shipObj.y = interval * i;
+			shipObj.ship = getRandomInt(0, ships.length - 1);
+			nextWave.push(shipObj);
+		    }
+		waves[nextTime] = nextWave;
+	    }
+    } 
+   /*****/ 
     
 function debrisMaker() {
-    if(levelTimer === debrisTime) {
-	var loc = new Point(space.width,getRandomInt(50,space.height-50));
-	var vel = new Point(getRandomInt(-1,-5),0);
-	var w = getRandomInt(20,50);
-	
-	enemies.push(new Rock(loc,vel,w,w,w,debrisImage(w)));
-	debrisTime += getRandomInt(200,400);
+	if(levelTimer === debrisTime) {
+
+		var vel = new Point(getRandomInt(-1, -5), 0);
+		var w = getRandomInt(20, 50);
+		var loc = new Point(space.width, getRandomInt(51, space.height - 50));
+		enemies.push(new Rock(loc, vel, w, w, w, debrisImage(w)));
+		debrisTime += getRandomInt(200, 400);
+	    }
     }
+
+    
+var bulletColors = ['Green','Red','Orange'];
+var bulletType = [{wt:0.7,item:'norm'},{wt:0.3,item:'targ'}];
+
+function generateShipTypes(level) {
+	var SHIP_BASE_LEVEL = 3;
+	var UNIT_DIMENSIONS = 5;
+	var UNIT_HEALTH = 5;
+	// Number of ship types as per level
+	var nShipTypes = 2 * Math.ceil(level / 2) + 1;
+	var ships = [];
+	for(var i=0;i < nShipTypes;i++) {
+		var aShipType = {};
+		// Level of this ship type
+		// Three ships per ship level
+		var shipLevel = (i % 3) + 1;
+
+		// Calculate min max dimensions
+		var minWidth =  (SHIP_BASE_LEVEL + shipLevel) * UNIT_DIMENSIONS;
+		var maxWidth =  minWidth + (shipLevel + 1) * UNIT_DIMENSIONS;
+
+		// Calc max min health for this type of ship
+		var minHealth = (level + shipLevel) * UNIT_HEALTH;
+		var maxHealth = minHealth + UNIT_HEALTH;
+
+		aShipType.width = getRandomInt(minWidth, maxWidth);
+		aShipType.height = getRandomInt(minWidth, maxWidth);
+		aShipType.life = getRandomInt(minHealth, maxHealth);
+
+		aShipType.sprite = shipIt(aShipType.width, aShipType.height);
+                aShipType.shipType = i;
+		aShipType.guns = getGuns(shipLevel);
+
+		ships.push(aShipType);
+	    }
+
+	return ships;
+
+    }
+
+// Generate a number to identify gun positions 
+// in one side of the ship
+function getGunSelector (shipLevel) {
+	if(shipLevel == 1) {
+		return 1;
+	    }
+
+	if(shipLevel == 2) {
+		return getRandomInt(2, 4);
+	    }
+
+	if(shipLevel == 3) {
+		return getRandomInt(5, 7);
+	    }
+
+	return 15;
+    }
+function randomItem(arr) {
+	var len = arr.length;
+	if(len == 0) return null;
+	return arr[0,getRandomInt(0, len - 1)];
+    }
+
+function pad(n, width, z) {
+  z = z || '0';
+  n = n + '';
+  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }
+
+function randomWeightedItem(arr) {
+	var pick = Math.random();
+	var counter = 0;
+	for(i in arr) {
+		counter += arr[i].wt;
+		if(pick <= counter) {
+			return arr[i].item;
+		    }
+	    }
+	return null;
+    }
+
+function getGuns(shipLevel,level) {
+        var UNIT_DMG = 1.5,maxGuns = 3;
+	var gunsListId = getGunSelector(shipLevel);
+	if(gunsListId == 15) {
+	    maxGuns = 4;
+	}
+	//alert(gunsListId);
+	// convert to binary string
+	var gunsList = gunsListId.toString(2);
+	gunsList = pad(gunsList,maxGuns); // Pad leading zeroes
+	gunsList = gunsList.split(''); // convert to array
+	var len = gunsList.length;
+	var guns = {};
+	var unitPos = 1 / (2 * maxGuns - 1);
+	//alert(gunsList);
+	var relativePos =0.1;
+	for(var i=0;i<len;i++,relativePos += unitPos) {
+	        var minDmg = (shipLevel + level) * UNIT_DMG;
+		var maxDmg = (shipLevel + level + 1) * UNIT_DMG;
+		var minVel = (shipLevel + 1);
+		var maxVel = (shipLevel * 2);
+		var gun = {
+		    dmg : getRandomInt(minDmg, maxDmg),
+		    bulletColor : randomItem(bulletColors),
+		    vel : new Point(-getRandomInt(minVel, maxVel),0),
+		    w : getRandomInt(4, 6),
+		    h : 2,
+		    type : randomWeightedItem(bulletType),
+		    relativeY : relativePos,
+		    reload : getRandomInt(40,60),
+		    counter : 0
+
+		    };
+		if(gunsList[i] == 1) {
+			guns[relativePos] = gun;
+			if(relativePos != 0.5) {
+				guns[1 - relativePos] = gun;
+			    }
+		    }
+	    }
+
+	return guns;
+    }
+    
+    
+    //alert(JSON.stringify(generateShipTypes(1)));

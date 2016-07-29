@@ -52,6 +52,8 @@ function twingun(ship) {
 		vel2 = new Point(7, 0);
 	    }
 	else {
+	    alert(JSON.stringify(ship));
+	    alert(arguments.callee.caller.toString());
 		loc1 = new Point(ship.loc.x, ship.loc.y);
 		vel1 = new Point(-7, 0);
 		loc2 = new Point(ship.loc.x, ship.loc.y + ship.h);
@@ -65,5 +67,5 @@ function homer(ship) {
     var loc = new Point(ship.loc.x + ship.w, ship.loc.y + ship.h / 2);
     var vel = new Point(5, 0);
     
-    return [new Homer(loc,vel,3,2,5,ship.isPlayer)];
+    return [new Homer(loc,vel,4,4,5,ship.isPlayer)];
 }

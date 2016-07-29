@@ -22,45 +22,17 @@ Homer.prototype = Object.create(Bullet.prototype);
 function Homer(loc,vel,w,h,hp,isPlayer) {
 	Bullet.call(this, loc, vel, w, h, hp);
 	this.isPlayer = isPlayer;
-	this.target = findNearestTarget(isPlayer);
-	this.life = 0;
-	this.prevLoc = loc;
-	this.lifeTimer = 20;
+	this.vel = findNearestTarget(isPlayer);
+	this.vel.sub(this.loc);
+	this.vel = this.vel.norm();
+	this.vel.x = Math.round(this.vel.x) * 5;
+	this.vel.y = Math.round(this.vel.y) * 5;
     }
 Homer.prototype.show = function() {
-	//space.rect(this.loc.x, this.loc.y, this.w, this.h, 'red', 'blue');
-	var tmp = space.ctx.lineWidth;
-	space.ctx.beginPath();
-	space.ctx.lineWidth = 5;
-	space.ctx.strokeStyle = 'Green';
-	space.ctx.moveTo(this.prevLoc.x, this.prevLoc.y);
-	space.ctx.lineTo(this.loc.x, this.loc.y);
-	space.ctx.stroke();
-	space.ctx.lineWidth = tmp;
-	
-
+	space.rect(this.loc.x, this.loc.y, this.w, this.h, 'Green', 'Green');
     };
 
 Homer.prototype.move = function() {
-
-	if(this.lifeTimer > 0) { 
-		var targetX = this.target.x - this.loc.x;
-		var targetY = this.target.y - this.loc.y;
-		var rotation = Math.atan2(targetY, targetX) * 180 / Math.PI;
-		var vx = 5 * (90 - Math.abs(rotation)) / 90;
-		var vy;
-		if(rotation < 0) {
-			vy = -5 + Math.abs(vx);//Going upwards.
-		    }
-		else {
-			vy = 5 - Math.abs(vx);//Going downwards.
-		    }
-		this.vel = new Point(Math.round(vx), Math.round(vy));
-
-		this.lifeTimer--;
-		
-	    }
-	this.prevLoc = {x :this.loc.x,y:this.loc.y};
 	this.loc.add(this.vel);
     };
 
@@ -68,11 +40,13 @@ Homer.prototype.move = function() {
 function findNearestTarget(isPlayer) {
 	if(isPlayer) {
 		var  len= enemies.length;
-                if(len === 0) { return new Point(0,0); }
-		return enemies[getRandomInt(0, len - 1)].loc;
+                if(len === 0) { return new Point(0, 0); }
+		var pos = enemies[getRandomInt(0, len - 1)].loc;
+
+		return new Point(pos.x, pos.y);
 	    }
 
-	return {x : player.loc.x, y: player.loc.y};
+	return new Point(player.loc.x,  player.loc.y);
     }
 
 
@@ -103,4 +77,25 @@ Mine.prototype.move = function() {
 	else {
 		this.dist--;
 	    }
+    };
+
+CustomBullet.prototype = Object.create(Body.prototype);
+function CustomBullet(bulletParams) {
+        var vel = bulletParams.vel;
+	
+	Body.call(this, bulletParams.loc, vel, bulletParams.w, bulletParams.h);
+	if(bulletParams.type == 'targ') {
+		this.isPlayer = bulletParams.isPlayer;
+		this.vel = findNearestTarget(this.isPlayer);
+		this.vel.sub(this.loc);
+		this.vel = this.vel.norm();
+		this.vel.x = Math.round(this.vel.x) * 5;
+		this.vel.y = Math.round(this.vel.y) * 5;
+	    }
+	this.color = bulletParams.bulletColor;
+	this.hp = bulletParams.dmg;
+    }
+CustomBullet.prototype.show = function() {
+	space.rect(this.loc.x, this.loc.y, this.w, this.h, 'red', this.color);
+
     };
