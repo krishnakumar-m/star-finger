@@ -96,6 +96,6 @@ function CustomBullet(bulletParams) {
 	this.hp = bulletParams.dmg;
     }
 CustomBullet.prototype.show = function() {
-	space.rect(this.loc.x, this.loc.y, this.w, this.h, 'red', this.color);
+	space.rect(this.loc.x, this.loc.y, this.w, this.h, this.color, this.color);
 
     };
