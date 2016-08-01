@@ -80,3 +80,26 @@ Canvas.prototype.roundRect = function(x, y, width, height, radius, fill, stroke)
   }
 
 };
+
+Canvas.prototype.poly = function(arr,fill,stroke,close) {
+        this.ctx.beginPath();
+	this.ctx.moveTo(arr[0].x, arr[0].y);
+
+	var len = arr.length;
+
+	for(i = 1;i < len;i++) {
+		this.ctx.lineTo(arr[i].x, arr[i].y);
+	    }
+	    
+	if(close) {
+	    this.ctx.closePath();
+	}
+	if(fill) {
+		this.ctx.fillStyle = fill;
+		this.ctx.fill();
+	    }
+	if(stroke) {
+		this.ctx.strokeStyle = stroke;
+		this.ctx.stroke();
+	    }
+    };
