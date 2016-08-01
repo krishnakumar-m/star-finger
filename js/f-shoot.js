@@ -1,77 +1,26 @@
-var shipList = ['crosswing','mouse','raider','warbird','rat'];
-//var powerupsList = ['oneshot','health','homer','twingun','3shot','shield'];
 var powerupSpriteMaker = {
     'shield': shieldSprite,
     'oneshot':oneshotSprite,
     'twingun':twingunSprite,
     'health': healthSprite,
-    '3shot':threeshotSprite,
-    'homer': homerSprite
+    '3shot':threeshotSprite
     };
-
-
-var ships = {
-    'crosswing' : {
-	w : 48,
-	h : 40,
-	hp : 60,
-	vel : new Point(0, 0),
-	spriteMaker : crosswing
-	},
-    'mouse' : {
-	w : 30,
-	h : 20,
-	hp : 5,
-	vel : new Point(-4, 0),
-	spriteMaker : mouse
-	},
-    'raider' : {
-	w : 40,
-	h : 30,
-	hp : 15,
-	vel : new Point(-3, 0),
-	spriteMaker : raider
-	},
-    'warbird' : {
-	w : 50,
-	h : 70,
-	hp : 25,
-	vel : new Point(-2, 0),
-	spriteMaker : warbird
-	},
-    'rat' : {
-	w : 20,
-	h : 30,
-	hp : 10,
-	vel : new Point(-4, 0),
-	spriteMaker : rat
-	}
-    };
+var ships = {};
 var sprites = {};
 
-var debrisTime = getRandomInt(200, 400);
-function preLoadShipSprites() {
+var debrisTime,lightningTime;
 
-	/*var len = shipList.length;
-
-	for(var i=0;i < len;i++) {
-		var thisShipType = shipList[i];
-		ships[thisShipType].sprite = getSprites(thisShipType);
-	    }*/
-	    playerSprite = getSprites('crosswing');
-    }
-
-function getSprites(id) {
-	var w = ships[id].w;
-	var h = ships[id].h;
+function getPlayerSprite() {
+	var w = 48;
+	var h = 40;
 	var cvs = new Canvas('temp', w, h);
 
-	 ships[id].spriteMaker(w,h,cvs);
+	crosswing(w, h, cvs);
 
-	 var img = new Image();
-	 img.src = cvs.cvs.toDataURL('img/png');
+	var img = new Image();
+	img.src = cvs.cvs.toDataURL('img/png');
 
-	 return img;
+	return img;
 	//return shipIt(w, h);
     }
 
@@ -129,63 +78,89 @@ function randomStarBg(x) {
 var maxLife = 100;
 
 function lifeMeter() {
-	/* var w = Math.round(player.life * bg.width / maxLife);
-	 bg.rect(0, 0, w, 5, 'red', 'red');
-	 w = Math.round(4*player.shieldHealth * bg.width / maxLife);
-	 bg.rect(0, 5, w, 5, 'blue', 'blue');*/
-
+	if(player.life <= 0) {
+		return;
+	    }
 	var startAngle = -Math.PI / 2;
 
 	var rad = player.life * 2 * Math.PI / maxLife;
 	bg.ctx.lineCap = 'round';
 	bg.ctx.beginPath();
 	bg.ctx.arc(50, 50, 20, startAngle, rad + startAngle);
-	bg.ctx.strokeStyle = 'Red';
+	bg.ctx.strokeStyle = 'rgba(204,0,0,0.5)';
 	bg.ctx.lineWidth = 10;
 	bg.ctx.stroke();
 	rad = 4 * player.shieldHealth * 2 * Math.PI / maxLife;
 	bg.ctx.beginPath();
 	bg.ctx.arc(50, 50, 30, startAngle, rad + startAngle);
-	bg.ctx.strokeStyle = 'Blue';
+	bg.ctx.strokeStyle = 'rgba(0,0,204,0.5)';
 	bg.ctx.stroke();
 
 
     }
 
+
+function startScreen() {
+	var w = gameoverscreen.width, h = gameoverscreen.height;
+	var unitw = w / 10;
+	var unith = h / 20;
+	gameoverscreen.cvs.style = 'display:block;';
+	gameoverscreen.clear();
+	gameoverscreen.ctx.textAlign = 'center';
+	gameoverscreen.ctx.textBaseLine = 'middle';
+	gameoverscreen.text('RANDOM SPACE', 4 * unitw, 4 * unith, 'White', '30px monospace');
+	gameoverscreen.rect(2 * unitw, 5 * unith , 4 * unitw , 1.5 * unith, 'Yellow', 'Red');
+	gameoverscreen.text('START', 4 * unitw, 6 * unith, 'White', '20px monospace');
+
+    }
+
+function init() {
+        level = 1;
+        ships = generateShipTypes(level);
+	player = new Ship(new Point(0, space.height / 2), new Point(0, 0), 48, 40, maxLife);
+	player.setWeapon(0.1, basegun);
+	paused = false;
+        levelTimer = 0;
+        waves = {};
+	nextWaveIfEndless2();
+	shipControl = false;
+	gameoverscreen.cvs.style = 'display:none;';
+	levelAnimCounter = 0;
+	Game.init(game, 50);
+	enemies = [];
+	bullets = [];
+	enemyBullets = [];
+	powerUps = [];
+	debrisTime = getRandomInt(200, 400);
+	lightningTime = getRandomInt(100,150);
+    }
 function test() {
 
 	bg = new Canvas('bg', window.innerWidth, window.innerHeight);
 	var bgs = [{
 		id: 'bg',
-		speed: 2,
+		speed: 1,
 		src: randomStarBg(0.2)
-		}, {
-		id: 'bg1',
-		speed: 3,
-		src: randomStarBg(1.2)
 		}];
 	/*, {
+	 id: 'bg1',
+	 speed: 3,
+	 src: randomStarBg(1.2)
+	 }, {
 	 id: 'bg2',
 	 speed: 3,
 	 src: randomStarBg()
 	 }];*/
 
-	preLoadShipSprites();
+	//preLoadShipSprites();
+	playerSprite = getPlayerSprite();
 	preloadPowerSprites();
-	ships = generateShipTypes(1);
-	
-	//alert(ships[i].sprite.src);
+	gameoverscreen = new Canvas('gameover', window.innerWidth, window.innerHeight);
 	space = new Canvas('fld', window.innerWidth, window.innerHeight);
-
-	player = new Ship(new Point(0, space.height / 2), new Point(0, 0), 48, 40, maxLife);
 	Scenery.init(bgs);
 
-	var shipControl = false;
-
-	paused = false;
-        levelTimer = 0;
-
-	nextWaveIfEndless2();
+	//init();
+	startScreen();
 
 	document.body.addEventListener('touchmove', function(event) {
 		event.preventDefault();
@@ -208,6 +183,7 @@ function test() {
 				var bullts = player.tryWeapon();
 				if(bullts) {
 					bullets = bullets.concat(bullts);
+					//bullets.push(bullts);
 				    }
 			    }, Game.frameInterval);
 
@@ -218,7 +194,7 @@ function test() {
 	    };
 	space.cvs.ontouchmove = function(event) {
 		event.preventDefault();
-		if(shipControl) {
+		if(shipControl && player.life > 0) {
 
 			player.loc.x = Math.round(event.touches[0].pageX - player.w / 2);
 			player.loc.y = Math.round(event.touches[0].pageY - player.h / 2);
@@ -237,17 +213,51 @@ function test() {
 		Game.pause();
 
 	    };
-        Game.init(game, 60);
+
+	gameoverscreen.cvs.ontouchstart = function() {
+	        var x = event.touches[0].pageX;
+		var y = event.touches[0].pageY;
+		var unitw = gameoverscreen.width / 10;
+		var unith = gameoverscreen.height / 20;
+		if(x > 2 * unitw && y > 5 * unith && x < 6 * unitw && y < 6.5 * unith) {
+			init();
+
+		    }
+	    };
+
 
     }
 
 
+var levelAnimCounter = 0;
+function levelStartAnim() {
+	bg.text('WAVE ' + level, bg.width / 2, bg.height / 2, 'rgba(255,255,0,' + 1 / levelAnimCounter + ')', '30px monospace');
+    }
+
 function game() {
 	space.clear();
+	Scenery.scene();
 	newShips2();
+	if(levelTimer > 1000 && enemies.length == 0) {
+		level++;
+		ships = generateShipTypes(level);
+		levelTimer = 0;
+		waves = {};
+		nextWaveIfEndless2();
+		levelAnimCounter = 1;
+		debrisTime = getRandomInt(200, 400);
+	    }
+
+	if(levelAnimCounter > 0) {
+		levelStartAnim();
+		levelAnimCounter = (levelAnimCounter + 1) % 30;
+
+	    }
 	debrisMaker();
-	player.show();
-       // space.ctx.drawImage(ships[0].sprite,0,0);
+	lightningMaker();
+	if(player.life > 0) {
+		player.show();
+	    }
 	for(i = bullets.length - 1; i >= 0;i--) {
 		bullets[i].move();
 		bullets[i].show();
@@ -262,7 +272,7 @@ function game() {
 	movePowerups();
 	partSys.update();
 	partSys.show();
-	Scenery.scene();
+
 	lifeMeter();
 	checkDeath();
 	levelTimer++;
@@ -297,7 +307,11 @@ function movePowerups () {
 				player.shieldHealth = Math.round(maxLife / 4);
 			    }
 			else {
-				player.setWeapon(powerUps[i].power);
+			        var gun=  powerUps[i].gun;
+				gun.vel = new Point(-gun.vel.x, gun.vel.y);
+
+				player.setWeapon(gun.relativeY, gun);
+
 			    }
 			powerUps.splice(i, 1);
 		    }
@@ -312,6 +326,7 @@ function hitsByEnemy() {
 	for(; i >= 0;i--) {
 		enemyBullets[i].move();
 		thisBullet = enemyBullets[i];
+		//alert(JSON.stringify(thisBullet));
 		thisBullet.show();
 		if(thisBullet.loc.x < 0) {
 			enemyBullets.splice(i, 1);
@@ -340,7 +355,7 @@ function hitEnemy() {
 		thisEnemy = enemies[i];
 		thisEnemy.move();
 		thisEnemy.show();
-		if(thisEnemy.loc.x + thisEnemy.w < 0) {
+		if((thisEnemy.loc.x + thisEnemy.w < 0) || thisEnemy.markForDelete) {
 			enemies.splice(i, 1);
 		    }  
 		else {
@@ -353,17 +368,38 @@ function hitEnemy() {
 					thisEnemy.life -= myBullet.hp;
 
 					if(thisEnemy.life <= 0) {
+					        if(thisEnemy.shipType == 'pedestal') {
+						    thisEnemy.lightning.markForDelete = true;
+						}
+					    
+					    
 						var decider = Math.random();
 					        if(decider > 0.5) {
-                                                        var thisPowerUp =thisEnemy.weapon;
+                                                        var thisPowerUp =null;
+							var picked =null;
 							if(decider < 0.6) {
 								thisPowerUp = 'health';
 							    }
 							else if(decider < 0.7) {
 								thisPowerUp = 'shield';
 							    }
+							else {
+
+								picked = getRandomMember(thisEnemy.guns);
+								if(picked) {
+									if(picked.relativeY == 0.5) {
+										thisPowerUp = 'oneshot';
+									    }
+									else if(picked.relativeY == 0.1 || picked.relativeY == 0.9) {
+										thisPowerUp = 'twingun';
+									    }
+									else {
+										thisPowerUp = '3shot';
+									    }
+								    }
+							    }
 							if(thisPowerUp) {
-								powerUps.push(new Powerup(thisEnemy.loc, new Point(-1, 0), 40, 40, 10, thisPowerUp));
+								powerUps.push(new CustomPowerup(thisEnemy.loc, new Point(-1, 0), 40, 40, 10, thisPowerUp, picked));
 							    }
 						    }
 						enemies.splice(i, 1);
@@ -405,78 +441,24 @@ function collideEnemy() {
 
 function checkDeath() {
 	if(player.life <= 0) {
-		alert('Dead');
+	        var w = gameoverscreen.width, h = gameoverscreen.height;
+		var unitw = w / 10;
+		var unith = h / 20;
 		Game.pause();
-	    }
-    }
-
-function shipFactory(props) {
-	if(props.ship == 'mouse') {
-		return new Mouse(new Point(space.width, Math.round(space.height * props.y)), props.vel, props.w, props.h, props.hp);
-
-	    }
-	else if(props.ship == 'raider') {
-		return new EnemyShip(new Point(space.width, Math.round(space.height * props.y)), props.vel, props.w, props.h, props.hp);
-
-	    } 
-	else if(props.ship == 'rat') {
-		return new Rat(new Point(space.width, Math.round(space.height * props.y)), props.vel, props.w, props.h, props.hp);
-
-	    }  
-	else if(props.ship == 'warbird') {
-		return new Warbird(new Point(space.width, Math.round(space.height * props.y)), props.vel, props.w, props.h, props.hp);
-
-	    }        
-
-    }
-
-
-function newShips() {
-	var thisWave = waves[levelTimer],i;
-	if(thisWave) {
-		var len = thisWave.length;
-		for(i = 0;i < len;i++) {
-			var params = thisWave[i];
-		        var shipType = params.ship;
-			var defaults = ships[shipType];
-			if(!params.w) {
-				params.w = defaults.w;
-			    }
-			if(!params.h) {
-				params.h = defaults.h;
-			    }
-			if(!params.hp) {
-				params.hp = defaults.hp;
-			    }
-			if(!params.vel) {
-				params.vel = defaults.vel;
-			    }
-			enemies.push(shipFactory(params));
+		gameoverscreen.cvs.style = 'display:block;';
+		gameoverscreen.clear();
+		gameoverscreen.ctx.textAlign = 'center';
+		gameoverscreen.ctx.textBaseLine = 'middle';
+		gameoverscreen.text('GAME OVER!', 4 * unitw, 4 * unith, 'White', '30px monospace');
+		if(typeof bullt !== 'undefined') {
+			window.clearInterval(bullt);
 		    }
-		nextWaveIfEndless();  
+
+		gameoverscreen.rect(2 * unitw, 5 * unith , 4 * unitw , 1.5 * unith, 'Yellow', 'Red');
+		gameoverscreen.text('RESTART', 4 * unitw, 6 * unith, 'White', '20px monospace');
 	    }
     }
 
-function nextWaveIfEndless() {
-	if(endless) {
-		waves = {};
-		var nextTime = levelTimer + getRandomInt(100, 200);
-		var nextWave = [], shipObj;
-		var nShips = getRandomInt(1, 5);
-
-		var interval = 1 / (nShips + 1);
-		var nAvailShips = shipList.length;
-		for(i = 1;i <= nShips;i++) {
-			shipObj = {};
-			shipObj.y = interval * i;
-			shipObj.ship = shipList[getRandomInt(1, nAvailShips - 1)];
-			nextWave.push(shipObj);
-		    }
-		waves[nextTime] = nextWave;
-	    }
-    } 
-    
-/************/
 
 function newShips2() {
 	var thisWave = waves[levelTimer],i;
@@ -485,7 +467,7 @@ function newShips2() {
 		for(i = 0;i < len;i++) {
 			var params = thisWave[i];
 		        var shipType = params.ship;
-			 params = ships[shipType];
+			params = ships[shipType];
 			params.loc = new Point(space.width, Math.round(space.height * thisWave[i].y));
 			enemies.push(new CustomShip(params));
 		    }
@@ -497,11 +479,12 @@ function nextWaveIfEndless2() {
 	if(endless) {
 		waves = {};
 		var nextTime = levelTimer + getRandomInt(100, 200);
+		if(nextTime > 1000) {
+			return;
+		    }
 		var nextWave = [], shipObj;
 		var nShips = getRandomInt(1, 5);
-
 		var interval = 1 / (nShips + 1);
-		var nAvailShips = shipList.length;
 		for(i = 1;i <= nShips;i++) {
 			shipObj = {};
 			shipObj.y = interval * i;
@@ -511,8 +494,7 @@ function nextWaveIfEndless2() {
 		waves[nextTime] = nextWave;
 	    }
     } 
-   /*****/ 
-    
+
 function debrisMaker() {
 	if(levelTimer === debrisTime) {
 
@@ -525,8 +507,24 @@ function debrisMaker() {
     }
 
     
-var bulletColors = ['Green','Red','Orange'];
-var bulletType = [{wt:0.7,item:'norm'},{wt:0.3,item:'targ'}];
+function lightningMaker() {
+    if(levelTimer === lightningTime) {
+	var lightningId = enemies.length+2;
+	var startx = space.width;
+	var starty = getRandomInt(0,space.height/2);
+	var endy = getRandomInt(starty+space.height/4,space.height);
+	var lightningHt = (endy - starty) - 60;
+	var lightning = new Lightning(new Point(startx,starty+30),lightningHt);
+	enemies.push(new Pedestal(new Point(startx,starty),lightning));
+	enemies.push(new Pedestal(new Point(startx,endy-30),lightning));
+	enemies.push(lightning);
+	lightningTime+=getRandomInt(300,400);
+    }
+
+}
+
+var bulletColors = ['Green','Red','Orange','Violet'];
+var bulletType = [{wt:0.9,item:'norm'},{wt:0.1,item:'targ'}];
 
 function generateShipTypes(level) {
 	var SHIP_BASE_LEVEL = 3;
@@ -549,13 +547,13 @@ function generateShipTypes(level) {
 		var minHealth = (level + shipLevel) * UNIT_HEALTH;
 		var maxHealth = minHealth + UNIT_HEALTH;
 
-		aShipType.width = getRandomInt(minWidth, maxWidth);
-		aShipType.height = getRandomInt(minWidth, maxWidth);
+		aShipType.w = getRandomInt(minWidth, maxWidth);
+		aShipType.h = getRandomInt(minWidth, maxWidth);
 		aShipType.life = getRandomInt(minHealth, maxHealth);
 
-		aShipType.sprite = shipIt(aShipType.width, aShipType.height);
+		aShipType.sprite = shipIt(aShipType.w, aShipType.h);
                 aShipType.shipType = i;
-		aShipType.guns = getGuns(shipLevel);
+		aShipType.guns = getGuns(shipLevel, level);
 
 		ships.push(aShipType);
 	    }
@@ -587,11 +585,11 @@ function randomItem(arr) {
 	return arr[0,getRandomInt(0, len - 1)];
     }
 
-function pad(n, width, z) {
-  z = z || '0';
-  n = n + '';
-  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
-}
+function pad(n,width,z) {
+	z = z || '0';
+	n = n + '';
+	return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+    }
 
 function randomWeightedItem(arr) {
 	var pick = Math.random();
@@ -606,22 +604,21 @@ function randomWeightedItem(arr) {
     }
 
 function getGuns(shipLevel,level) {
-        var UNIT_DMG = 1.5,maxGuns = 3;
+        var UNIT_DMG = 1,maxGuns = 3;
 	var gunsListId = getGunSelector(shipLevel);
 	if(gunsListId == 15) {
-	    maxGuns = 4;
-	}
-	//alert(gunsListId);
+		maxGuns = 4;
+	    }
 	// convert to binary string
 	var gunsList = gunsListId.toString(2);
-	gunsList = pad(gunsList,maxGuns); // Pad leading zeroes
+	gunsList = pad(gunsList, maxGuns); // Pad leading zeroes
 	gunsList = gunsList.split(''); // convert to array
 	var len = gunsList.length;
 	var guns = {};
 	var unitPos = 1 / (2 * maxGuns - 1);
 	//alert(gunsList);
 	var relativePos =0.1;
-	for(var i=0;i<len;i++,relativePos += unitPos) {
+	for(var i=0;i < len;i++,relativePos += unitPos) {
 	        var minDmg = (shipLevel + level) * UNIT_DMG;
 		var maxDmg = (shipLevel + level + 1) * UNIT_DMG;
 		var minVel = (shipLevel + 1);
@@ -629,25 +626,35 @@ function getGuns(shipLevel,level) {
 		var gun = {
 		    dmg : getRandomInt(minDmg, maxDmg),
 		    bulletColor : randomItem(bulletColors),
-		    vel : new Point(-getRandomInt(minVel, maxVel),0),
+		    vel : new Point(-getRandomInt(minVel, maxVel), 0),
 		    w : getRandomInt(4, 6),
 		    h : 2,
 		    type : randomWeightedItem(bulletType),
-		    relativeY : relativePos,
-		    reload : getRandomInt(40,60),
+		    relativeY : parseFloat(relativePos.toFixed(1)),
+		    reload : getRandomInt(40, 60),
 		    counter : 0
 
 		    };
+
+		var fltPos = parseFloat(relativePos.toFixed(1));
 		if(gunsList[i] == 1) {
-			guns[relativePos] = gun;
+			guns[fltPos] = gun;
 			if(relativePos != 0.5) {
-				guns[1 - relativePos] = gun;
+			        var tempgun = JSON.parse(JSON.stringify(gun));
+				tempgun.relativeY = 1 - fltPos;
+				guns[1 - fltPos] = tempgun ;
 			    }
 		    }
 	    }
 
 	return guns;
     }
+
+function getRandomMember(obj) {
+	if(!obj) {
+		return null;
+	    }
+	var keys = Object.keys(obj);
+	return obj[randomItem(keys)];
+    }
     
-    
-    //alert(JSON.stringify(generateShipTypes(1)));
