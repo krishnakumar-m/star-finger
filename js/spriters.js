@@ -325,18 +325,18 @@ function rock(w,h,cvs) {
 
 function powerUp2(w,h,cvs,type) {
 	powerupSpriteMaker[type](0.2 * w, 0.2 * w, 0.6 * w, 0.6 * w, cvs);
-	var grd = cvs.ctx.createRadialGradient(w / 2, w / 2, w / 4, w / 2, w / 2, w / 2);
-	grd.addColorStop(0, 'rgba(0,0,0,0.2)');
-	grd.addColorStop(1, 'rgba(0,255,255,1)');
-	cvs.circle(w / 2, w / 2, w / 2,'White',grd);
+	/*var grd = cvs.ctx.createRadialGradient(w / 2, w / 2, w / 4, w / 2, w / 2, w / 2);
+	 grd.addColorStop(0, 'rgba(0,0,0,0.2)');
+	 grd.addColorStop(1, 'rgba(0,255,255,1)');
+	 cvs.circle(w / 2, w / 2, w / 2,'White',grd);*/
     }
 
 function twingunSprite(startx,starty,w,h,cvs) {
         var ctx = cvs.ctx;
 	ctx.save();
 	ctx.translate(startx, starty);
-	cvs.rect(0, 0.15 * h, 0.9 * w, 0.1 * h,'Gray','DarkGray');
-	cvs.rect(0, 0.75 * h, 0.9 * w, 0.1 * h,'Gray','DarkGray');
+	cvs.rect(0, 0.15 * h, 0.9 * w, 0.1 * h, 'Gray', 'DarkGray');
+	cvs.rect(0, 0.75 * h, 0.9 * w, 0.1 * h, 'Gray', 'DarkGray');
 
 	cvs.roundRect(0.8 * w, 0.65 * h, 0.2 * w, 0.3 * h, h * 0.05, 'Red');
 	cvs.roundRect(0.8 * w, 0.05 * h, 0.2 * w, 0.3 * h, h * 0.05, 'Red');
@@ -350,14 +350,14 @@ function oneshotSprite(startx,starty,w,h,cvs) {
         var ctx = cvs.ctx;
 	ctx.save();
 	ctx.translate(startx, starty);
-	cvs.rect(0, 0.4 * h, 0.9 * w, 0.2 * h,'Gray','DarkGray');
-	
+	cvs.rect(0, 0.4 * h, 0.9 * w, 0.2 * h, 'Gray', 'DarkGray');
+
 	cvs.roundRect(0, 0, w / 3, h, 0.2 * h, 'Gray');
 	var grd = cvs.ctx.createLinearGradient(0, 0.25 * h, 0, 0.75 * h);
 	grd.addColorStop(0, 'rgba(255,255,255,1)');
 	grd.addColorStop(0.5, 'rgba(0,255,0,0.3)');
 	grd.addColorStop(1, 'rgba(255,255,255,1)');
-	cvs.roundRect( 0.7 * w, 0.3 * h, 0.3 * w, 0.4 * h, h * 0.25, grd);
+	cvs.roundRect(0.7 * w, 0.3 * h, 0.3 * w, 0.4 * h, h * 0.25, grd);
 	ctx.restore();
     }
 
@@ -369,8 +369,8 @@ function healthSprite(startx,starty,w,h,cvs) {
         var ctx = cvs.ctx;
 	ctx.save();
 	ctx.translate(startx, starty);
-	cvs.rect(0.2 * w, 0.4 * h, 0.6 * w, 0.2 * h,'Red','Red');
-	cvs.rect(0.4 * w, 0.2 * h, 0.2 * w, 0.6 * h,'Red','Red');
+	cvs.rect(0.2 * w, 0.4 * h, 0.6 * w, 0.2 * h, 'Red', 'Red');
+	cvs.rect(0.4 * w, 0.2 * h, 0.2 * w, 0.6 * h, 'Red', 'Red');
 	ctx.restore();
     }
 
@@ -389,21 +389,21 @@ function shieldSprite(startx,starty,w,h,cvs) {
 	ctx.restore();
 
     }
-    
-    
- function homerSprite(startx,starty,w,h,cvs) {
+
+
+function homerSprite(startx,starty,w,h,cvs) {
         var ctx = cvs.ctx;
 	ctx.save();
 	ctx.translate(startx, starty);
-	var grd = ctx.createRadialGradient(w/2, h / 2, w/ 3, w/2, h / 2, w/2);
+	var grd = ctx.createRadialGradient(w / 2, h / 2, w / 3, w / 2, h / 2, w / 2);
 	grd.addColorStop(0, "red");
 	grd.addColorStop(1, "gray");
-	cvs.circle(w/2, h / 2, w / 2, 'White',grd);
+	cvs.circle(w / 2, h / 2, w / 2, 'White', grd);
 	ctx.restore();
 
     }
-    
-    
+
+
 function wing(w,h,minparts,maxparts) {
 	var cvs = document.createElement('canvas');
 	var ctx = cvs.getContext('2d');
@@ -413,7 +413,7 @@ function wing(w,h,minparts,maxparts) {
 
 	var nBlocks = getRandomInt(minparts || 2, maxparts || 4);
 
-	var unitH = h / nBlocks;
+	var unitH = Math.round(h / nBlocks);
 
 	x1 = getRandomInt(0, w / 2);
 	x2 = getRandomInt(x1 + 1, w);
@@ -440,7 +440,7 @@ function wing(w,h,minparts,maxparts) {
 		ctx.fillStyle = grd;// 'Red';
 
 		ctx.fill();
-		ctx.stroke();
+		//ctx.stroke();
 		x1 = x3;
 		x2 = x4;
 		grdflag = !grdflag;
@@ -456,7 +456,7 @@ function wing(w,h,minparts,maxparts) {
 function shipIt(w,h) {
 
 	var img = new Image();
-
+//alert(arguments.callee.caller.toString());
 	img.src = wing(w, h / 2, 2, 4).toDataURL('image/png');
 
 	var cvs1 = document.createElement('canvas');
@@ -508,7 +508,7 @@ function tail(w,h,minparts,maxparts,ctx,x) {
 		ctx.fillStyle = 'DarkGray';
 
 		ctx.fill();
-		ctx.stroke();
+		//ctx.stroke();
 		x1 = x3;
 		x2 = x4;
 	    }
@@ -517,7 +517,7 @@ function tail(w,h,minparts,maxparts,ctx,x) {
 
 
 function fuselage(totalw,totalh,w,h,ctx) {
-var fuseLageColors = ['Orange','Red','Green','Blue'];
+	var fuseLageColors = ['Orange','Red','Green','Blue'];
 
 	/*ctx.save();
 	 ctx.translate(0,totalh);*/
@@ -535,7 +535,7 @@ var fuseLageColors = ['Orange','Red','Green','Blue'];
 	ctx.fillStyle = fuseLageColors[getRandomInt(0, 3)];
 	ctx.strokeStyle = 'Black';
 	ctx.fill();
-	ctx.stroke();
+	//ctx.stroke();
 	cockpit(x1, x2, x3, x4, h, ctx);
 	return [x1, x2, x3, x4, h];
 	//ctx.restore();
@@ -560,7 +560,37 @@ function cockpit(x1,x2,x3,x4,h,ctx) {
 	ctx.closePath();
 	ctx.fillStyle = 'Silver';
 
-	ctx.fill();ctx.stroke();
+	ctx.fill();
+	//ctx.stroke();
 
     }
 
+
+function lightning(x,y,w,h,cvs,lastOutput) {
+        cvs.ctx.save();
+	if(lastOutput.length) {
+		cvs.ctx.lineWidth = 2;
+		cvs.poly(lastOutput, null, 'rgba(255,255,255,0.3)');
+	    }
+
+	var output = midpointDisp(x+w/2, y, x+w/2, y+h, 3);
+	cvs.ctx.lineWidth = 4;
+	cvs.poly(output, null, 'rgba(255,255,255,1)');
+	cvs.ctx.restore();
+	return output;
+    }
+
+function midpointDisp(x1,y1,x2,y2,level) {
+	var midy = (y1 + y2) / 2;
+	var midx = (x1 + x2) / 2;
+        var disp = 10;
+	var x3 = midx + getRandomInt(-disp, disp);
+	var y3 = midy + getRandomInt(-disp, disp);
+	if(level == 0) {
+		return [ {x:x1,y:y1},{x:x3,y:y3},{x:x2,y:y2}  ];
+	    }
+
+	return midpointDisp(x1, y1, x3, y3, level - 1).concat([{x:x3,y:y3}]).concat(midpointDisp(x3, y3, x2, y2, level - 1));
+
+
+    }
