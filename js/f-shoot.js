@@ -59,7 +59,7 @@ function preloadPowerSprites() {
     }
 var waves = {}  ;
 var endless = true;//Endless Random Hell
-var enemies = [], bullets = [], enemyBullets = [], powerUps=[];
+var enemies = [], bullets = [], enemyBullets = [], powerUps=[],paused=false;
 
 function randomStarBg(x) {
         var hsl ;
