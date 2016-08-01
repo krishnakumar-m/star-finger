@@ -5,7 +5,7 @@ var basegun = {
     w : 5,
     h : 2,
     type : 'norm',
-    relativeY : relativePos,
+    relativeY : 0,
     reload : 40,
     counter : 0
 
@@ -49,12 +49,15 @@ function Ship(loc,vel,w,h,life) {
 
 	this.setWeapon = function(pos,gun) {
 		this.guns[pos] = gun;
+		this.guns[pos].relativeY = pos;
 		if(pos != 0.5) {
-			this.guns[1 - pos] = gun;
+		        var cmpl = parseFloat((1 - pos).toFixed(1));
+			this.guns[cmpl] = JSON.parse(JSON.stringify(gun));
+			this.guns[cmpl].relativeY = cmpl;
 		    }
 	    };
 
-	this.setWeapon(0.3, basegun);
+	//this.setWeapon(0.3, basegun);
 	this.shipType = 'crosswing';
 	this.shield = false;
 	this.shieldHealth = 0;
@@ -64,41 +67,23 @@ function Ship(loc,vel,w,h,life) {
 Ship.prototype.show = function() {
         space.ctx.drawImage(playerSprite, this.loc.x, this.loc.y);
     };
-/*Ship.prototype.setWeapon = function(weaponId) {
- this.weapon = weaponId;
- this.fireWeapon = weapons[weaponId].fire;
- this.reload = weapons[weaponId].reload;
- };
-
-
-
- Ship.prototype.tryWeapon = function() {
- this.counter = (this.counter + 1) % this.reload;
- if(this.counter == 0) {
- return this.fireWeapon(this);
- }
- };*/
-
-/*
- Ship.prototype.setWeapon = function(pos,gun) {
- this.guns[pos] = gun;
- if(pos!=0.5) {
- this.guns[1-pos] = gun;
- }
- };*/
 
 Ship.prototype.tryWeapon = function() {
+        var bullets = [];
 	for(var i in this.guns) {
 		this.guns[i].counter = (this.guns[i].counter + 1) % this.guns[i].reload;
+		//alert(i+' '+JSON.stringify(this.guns[i]));
 		if(this.guns[i].counter == 0) {
-			return this.fireWeapon(i);
+			bullets.push(this.fireWeapon(i));
 		    }
 	    }
+	return bullets;
     };
 
 Ship.prototype.fireWeapon = function(i) {
-	var loc = new Point(this.loc.x, this.loc.y + this.guns[i].relativeY * this.w);
+	var loc = new Point(this.loc.x + this.w, this.loc.y + parseFloat(i) * this.h);
 	this.guns[i].loc = loc;
+	//alert(i+' '+JSON.stringify(this.guns[i]));
 	return new CustomBullet(this.guns[i]);
     };
 
@@ -208,6 +193,16 @@ function CustomShip(shipParams,movParams) {
 	    H: getRandomInt(-5, 5)
 
 	    };
+	/*this.movParams = movParams || {
+	 A: getRandomInt(-5, -1),
+	 B: 0,
+	 C: 0,
+	 D: 0,
+	 E: 0,
+	 F: 0,
+	 G: 0,
+	 H: 0
+	 };*/
 	this.t = 0;
 
     }
@@ -224,31 +219,90 @@ CustomShip.prototype.move = function() {
 
 	var bllts = this.tryWeapon();
 	if(bllts) {
-		enemyBullets = enemyBullets.push(bllts);
+		//enemyBullets.push(bllts);
+		enemyBullets = enemyBullets.concat(bllts);
+
 	    }
 	this.t++;
     };
 
 CustomShip.prototype.tryWeapon = function() {
-	//var n = this.guns.length;
-
+        var bullets = [];
 	for(i in this.guns) {
 		this.guns[i].counter = (this.guns[i].counter + 1) % this.guns[i].reload;
 		if(this.guns[i].counter == 0) {
-			return this.fireWeapon(i);
+			bullets.push(this.fireWeapon(i));
 		    }
 	    }
+
+	return bullets;
     };
 
 CustomShip.prototype.fireWeapon = function(i) {
-	var loc = new Point(this.loc.x, this.loc.y + this.guns[i].relativeY * this.w);
+        var y = Math.round(this.loc.y + this.guns[i].relativeY * this.h);
+	var loc = new Point(this.loc.x, y);
+	/*var vel = this.guns[i].vel;
+	 vel = new Point(this.vel.x + vel.x,this.vel.y);
+	 this.guns[i].vel = vel;*/
 	this.guns[i].loc = loc;
-	//alert('this');
-	//enemyBullets.push(new CustomBullet(this.guns[i]));
 	return new CustomBullet(this.guns[i]);
     };
 
 CustomShip.prototype.show = function() {
-
         space.ctx.drawImage(ships[this.shipType].sprite, this.loc.x, this.loc.y);
+    };
+
+
+CustomPowerup.prototype = Object.create(Body.prototype);
+function CustomPowerup(loc,vel,w,h,life,power,params) {
+	Body.call(this, loc, vel, w, h);
+	this.life = life;
+	this.power = power;
+	if(params) {
+		this.color = params.bulletColor;
+	    }
+	else {
+		this.color = 'White';
+	    }
+	this.gun = params || null;
+    }
+CustomPowerup.prototype.show = function() {
+	space.ctx.drawImage(sprites[this.power], this.loc.x, this.loc.y);
+	var w = this.w;
+	var grd = space.ctx.createRadialGradient(this.loc.x + w / 2, this.loc.y + w / 2, w / 4, this.loc.x + w / 2, this.loc.y + w / 2, w / 2);
+	grd.addColorStop(0, 'rgba(0,0,0,0.2)');
+	grd.addColorStop(1, this.color);
+	space.circle(this.loc.x + w / 2, this.loc.y + w / 2, w / 2, 'Black', grd);
+    };
+
+Pedestal.prototype = Object.create(Ship.prototype);
+function Pedestal(loc,lightningId) {
+	Ship.call(this, loc, new Point(-1, 0), 40, 30, 25);
+	this.isPlayer = false;
+	this.shipType = 'pedestal';
+	this.lightning = lightningId;
+	this.guns = {};
+    }
+
+Pedestal.prototype.show = function() {
+	
+	var grd = 'Gold';
+	var stripHt = this.h/3;
+	space.roundRect(this.loc.x, this.loc.y, this.w, stripHt, stripHt/2, grd, 'Black');
+	space.roundRect(this.loc.x, this.loc.y+2*stripHt, this.w, stripHt, stripHt/2, grd, 'Black');
+	
+    };
+
+Lightning.prototype = Object.create(Ship.prototype);
+function Lightning(loc,h) {
+	Ship.call(this, loc, new Point(-1, 0), 40, h, 1000);
+	this.isPlayer = false;
+	this.shipType = 'lightning';
+	this.markForDelete = false;
+	this.guns = {};
+	this.lastBolt = [];
+    }
+    
+Lightning.prototype.show = function() {
+	this.lastBolt = lightning(this.loc.x,this.loc.y,this.w,this.h,space,this.lastBolt);
     };
