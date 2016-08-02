@@ -23,20 +23,6 @@ Body.prototype.move = function() {
 
     };
 /**
- Powerup
- */
-Powerup.prototype = Object.create(Body.prototype);
-function Powerup(loc,vel,w,h,life,power) {
-	Body.call(this, loc, vel, w, h);
-	this.life = life;
-	this.power = power;
-    }
-Powerup.prototype.show = function() {
-	/* space.rect(this.loc.x,this.loc.y,this.w,this.h,'red','white');
-	 space.text(this.power,this.loc.x,this.loc.y+this.h,'Black','10px Arial');*/
-	space.ctx.drawImage(sprites[this.power], this.loc.x, this.loc.y);
-    };
-/**
  Normal ship
  */
 Ship.prototype = Object.create(Body.prototype);
@@ -88,76 +74,6 @@ Ship.prototype.fireWeapon = function(i) {
     };
 
 var DEG2RAD = Math.PI / 180;
-/*
- Extend all enemy ships from the below class
- */
-EnemyShip.prototype = Object.create(Ship.prototype);
-function EnemyShip(loc,vel,w,h,life,movParams) {
-	Ship.call(this, loc, vel, w, h, life);
-	this.isPlayer = false;
-	this.shipType = 'raider';
-	//this.setWeapon('oneshot');
-
-	this.movParams = movParams || {
-	    A: getRandomInt(-5, -1),
-	    B: getRandomInt(-2, 2),
-	    C: getRandomInt(-5, 5),
-	    D: getRandomInt(-5, 5),
-	    E: getRandomInt(-2, 2),
-	    F: getRandomInt(-2, 2),
-	    G: getRandomInt(-5, 5),
-	    H: getRandomInt(-5, 5)
-
-	    };
-	this.t = 0;
-
-    }
-EnemyShip.prototype.move = function() {
-        this.vel.x = this.movParams.A + this.movParams.B * Math.sin((this.movParams.C * this.t + this.movParams.D) * DEG2RAD);
-	this.vel.y = this.movParams.E + this.movParams.F * Math.sin((this.movParams.G * this.t + this.movParams.H) * DEG2RAD);
-
-
-	this.loc.add(this.vel);
-	if(this.loc.y <= 0 || (this.loc.y + this.h) >= space.height) {
-		this.movParams.E = -this.movParams.E;
-		this.movParams.F = -this.movParams.F;
-	    }
-	var bllts = this.tryWeapon();
-	if(bllts) {
-		enemyBullets = enemyBullets.concat(bllts);
-	    }
-	this.t++;
-
-    };
-
-/*
- Tiny ship
- */
-Mouse.prototype = Object.create(EnemyShip.prototype);
-
-function Mouse(loc,vel,w,h,life) {
-	EnemyShip.call(this, loc, vel, w, h, life);
-	this.setWeapon('oneshot');
-	this.shipType = 'mouse';
-    }
-
-/* Rat - bigger version of mouse */
-Rat.prototype = Object.create(EnemyShip.prototype);
-
-function Rat(loc,vel,w,h,life) {
-	EnemyShip.call(this, loc, vel, w, h, life);
-	this.setWeapon('homer');
-	this.shipType = 'rat';
-    }
-
-/* Warbird - staircase ship */
-Warbird.prototype = Object.create(EnemyShip.prototype);
-
-function Warbird(loc,vel,w,h,life) {
-	EnemyShip.call(this, loc, vel, w, h, life);
-	this.setWeapon('3shot');
-	this.shipType = 'warbird';
-    }
 
 /* Rock */
 
