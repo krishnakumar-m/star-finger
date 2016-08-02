@@ -60,7 +60,8 @@ function preloadPowerSprites() {
 var waves = {}  ;
 var endless = true;//Endless Random Hell
 var enemies = [], bullets = [], enemyBullets = [], powerUps=[],paused=false;
-
+var gameoverscreen,space,bg;
+var player,shipControl;
 function randomStarBg(x) {
         var hsl ;
 	var hs = [0,60,240];
@@ -104,7 +105,7 @@ function startScreen() {
 	var w = gameoverscreen.width, h = gameoverscreen.height;
 	var unitw = w / 10;
 	var unith = h / 20;
-	gameoverscreen.cvs.style = 'display:block;';
+	//gameoverscreen.cvs.style = 'display:block;';
 	gameoverscreen.clear();
 	gameoverscreen.ctx.textAlign = 'center';
 	gameoverscreen.ctx.textBaseLine = 'middle';
