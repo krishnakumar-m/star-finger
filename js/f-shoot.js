@@ -62,7 +62,7 @@ var endless = true;//Endless Random Hell
 var enemies = [], bullets = [], enemyBullets = [], powerUps=[],paused=false;
 var gameoverscreen,space,bg;
 var player,shipControl;
-function randomStarBg(x) {
+/*function randomStarBg(x) {
         var hsl ;
 	var hs = [0,60,240];
 	bg.clear();
@@ -72,7 +72,7 @@ function randomStarBg(x) {
 		bg.circle(bg.width * Math.random(), bg.height * Math.random(), x * Math.random(), hsl, hsl);
 	    }
 	return bg.cvs.toDataURL();
-    }
+    }*/
 
 
 
@@ -107,6 +107,7 @@ function startScreen() {
 	var unith = h / 20;
 	//gameoverscreen.cvs.style = 'display:block;';
 	gameoverscreen.clear();
+	randomStarBg(gameoverscreen,0.5);
 	gameoverscreen.ctx.textAlign = 'center';
 	gameoverscreen.ctx.textBaseLine = 'middle';
 	gameoverscreen.text('RANDOM SPACE', 4 * unitw, 4 * unith, 'White', '30px monospace');
@@ -138,11 +139,13 @@ function init() {
 function test() {
 
 	bg = new Canvas('bg', window.innerWidth, window.innerHeight);
-	var bgs = [{
+	gameoverscreen = new Canvas('gameover', window.innerWidth, window.innerHeight);
+	space = new Canvas('fld', window.innerWidth, window.innerHeight);
+	/*var bgs = [{
 		id: 'bg',
 		speed: 1,
 		src: randomStarBg(0.2)
-		}];
+		}];*/
 	/*, {
 	 id: 'bg1',
 	 speed: 3,
@@ -153,15 +156,34 @@ function test() {
 	 src: randomStarBg()
 	 }];*/
 
+	 var bgs = [{
+
+		speed: 1,
+		src: randomStarBg(bg, 0.5)
+		},
+		{
+		speed: 3,
+		src: bgLandScape(bg, getRandomInt(100, 200), 'hsl(240,40%,50%)', 3, 40, 0.55)
+		},
+		{
+		speed: 5,
+		src: bgLandScape(bg, getRandomInt(200, 300), 'hsl(240,40%,30%)', 4, 20, 0.5)
+		},
+		{
+		speed: 7,
+		src: bgLandScape(bg, getRandomInt(space.height-200, space.height), 'hsl(240,40%,10%)', 5, 10, 0.3)
+
+		}
+	    ];
+	 
 	//preLoadShipSprites();
 	playerSprite = getPlayerSprite();
 	preloadPowerSprites();
-	gameoverscreen = new Canvas('gameover', window.innerWidth, window.innerHeight);
-	space = new Canvas('fld', window.innerWidth, window.innerHeight);
-	Scenery.init(bgs);
-
-	//init();
-	startScreen();
+	
+	//Scenery.init(bgs);
+        Scenery.init(bg.cvs, bgs, bg.width, bg.height);
+	init();
+	//startScreen();
 
 	document.body.addEventListener('touchmove', function(event) {
 		event.preventDefault();

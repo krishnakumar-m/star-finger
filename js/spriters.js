@@ -421,3 +421,56 @@ function midpointDisp(x1,y1,x2,y2,level) {
 
 
     }
+    
+function nmsky() {
+
+	var cvs = new Canvas('bg1', 700, 500); 
+	var bgs = [{
+
+		speed: 1,
+		src: randomStarBg(cvs, 0.2)
+		},
+		{
+		speed: 3,
+		src: bgLandScape(cvs, getRandomInt(100, 200), 'hsl(240,40%,50%)', 3, 100, 0.55)
+		},
+		{
+		speed: 5,
+		src: bgLandScape(cvs, getRandomInt(200, 300), 'hsl(240,40%,30%)', 4, 100, 0.5)
+		},
+		{
+		speed: 7,
+		src: bgLandScape(cvs, getRandomInt(300, 400), 'hsl(240,40%,10%)', 5, 100, 0.3)
+
+		}
+	    ];
+
+	Scenery.init(cvs.cvs, bgs, 700, 500);
+	Game.init(function() {Scenery.scene();}, 60);
+    }
+
+function bgLandScape(cvs,y,color,folds,max,cragginess) {
+	var ctx =cvs.ctx;
+	cvs.clear();
+	cvs.poly(midpointDisp(0, y, cvs.width, y, folds, max, cragginess));
+	ctx.lineTo(cvs.width, cvs.height);
+	ctx.lineTo(0, cvs.height);
+	//ctx.lineTo(0,y);
+	ctx.closePath();
+	ctx.fillStyle = color;
+	ctx.fill();
+
+	return cvs.cvs.toDataURL();
+    }
+
+function randomStarBg(bg,x) {
+        var hsl ;
+	var hs = [0,60,240];
+	bg.clear();
+	for(var i=0;i < 200;i++) {
+	        var sat = getRandomInt(50, 100);
+		hsl = 'hsla(' + hs[getRandomInt(0, 2)] + ',' + sat + '%,88%,1';
+		bg.circle(bg.width * Math.random(), bg.height * Math.random(), x * Math.random(), hsl, hsl);
+	    }
+	return bg.cvs.toDataURL();
+    }
