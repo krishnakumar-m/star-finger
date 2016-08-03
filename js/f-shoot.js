@@ -134,7 +134,7 @@ function init() {
 	enemyBullets = [];
 	powerUps = [];
 	debrisTime = getRandomInt(200, 400);
-	lightningTime = getRandomInt(100,150);
+	lightningTime = getRandomInt(300,350);
     }
 function test() {
 
