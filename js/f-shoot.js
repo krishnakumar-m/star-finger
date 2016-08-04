@@ -62,19 +62,6 @@ var endless = true;//Endless Random Hell
 var enemies = [], bullets = [], enemyBullets = [], powerUps=[],paused=false;
 var gameoverscreen,space,bg;
 var player,shipControl;
-/*function randomStarBg(x) {
-        var hsl ;
-	var hs = [0,60,240];
-	bg.clear();
-	for(var i=0;i < 200;i++) {
-	        var sat = getRandomInt(50, 100);
-		hsl = 'hsla(' + hs[getRandomInt(0, 2)] + ',' + sat + '%,88%,1';
-		bg.circle(bg.width * Math.random(), bg.height * Math.random(), x * Math.random(), hsl, hsl);
-	    }
-	return bg.cvs.toDataURL();
-    }*/
-
-
 
 var maxLife = 100;
 
@@ -105,7 +92,7 @@ function startScreen() {
 	var w = gameoverscreen.width, h = gameoverscreen.height;
 	var unitw = w / 10;
 	var unith = h / 20;
-	//gameoverscreen.cvs.style = 'display:block;';
+	gameoverscreen.cvs.style.display = 'block';
 	gameoverscreen.clear();
 	randomStarBg(gameoverscreen,0.5);
 	gameoverscreen.ctx.textAlign = 'center';
@@ -126,7 +113,7 @@ function init() {
         waves = {};
 	nextWaveIfEndless2();
 	shipControl = false;
-	gameoverscreen.cvs.style = 'display:none;';
+	gameoverscreen.cvs.style.display='none';
 	levelAnimCounter = 0;
 	Game.init(game, 50);
 	enemies = [];
@@ -141,20 +128,6 @@ function test() {
 	bg = new Canvas('bg', window.innerWidth, window.innerHeight);
 	gameoverscreen = new Canvas('gameover', window.innerWidth, window.innerHeight);
 	space = new Canvas('fld', window.innerWidth, window.innerHeight);
-	/*var bgs = [{
-		id: 'bg',
-		speed: 1,
-		src: randomStarBg(0.2)
-		}];*/
-	/*, {
-	 id: 'bg1',
-	 speed: 3,
-	 src: randomStarBg(1.2)
-	 }, {
-	 id: 'bg2',
-	 speed: 3,
-	 src: randomStarBg()
-	 }];*/
 
 	 var bgs = [{
 
@@ -182,8 +155,8 @@ function test() {
 	
 	//Scenery.init(bgs);
         Scenery.init(bg.cvs, bgs, bg.width, bg.height);
-	init();
-	//startScreen();
+	//init();
+	startScreen();
 
 	document.body.addEventListener('touchmove', function(event) {
 		event.preventDefault();
