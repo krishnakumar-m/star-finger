@@ -114,19 +114,20 @@ function line(x1,y1,x2,y2,level) {
 
 function rock(w,h,cvs) {
 
-	var x1 = getRandomInt(0, w);
-	var y1 = 0;
+        var margin = w/5;
+	var x1 = getRandomInt(margin, w-margin);
+	var y1 = margin;
 
-	var x2 = 0;
-	var y2 = getRandomInt(0, h);
+	var x2 = margin;
+	var y2 = getRandomInt(margin, h-margin);
 
-	var x3 = getRandomInt(0, w);
-	var y3 = h;
+	var x3 = getRandomInt(margin, w-margin);
+	var y3 = h-margin;
 
-	var x4 = w;
-	var y4 = getRandomInt(0, h);
+	var x4 = w-margin;
+	var y4 = getRandomInt(margin, h-margin);
 
-	var maxLevel = 1;
+	var maxLevel = 2;
 
 	cvs.ctx.beginPath();
 
@@ -144,7 +145,7 @@ function rock(w,h,cvs) {
 	    }
 
 	cvs.ctx.closePath();
-	cvs.ctx.lineWidth = w / 3;
+	cvs.ctx.lineWidth = margin;
 
 	cvs.ctx.strokeStyle = 'rgb(130,95,73)';
 	cvs.ctx.stroke();
@@ -272,10 +273,13 @@ function wing(w,h,minparts,maxparts) {
 		x2 = x4;
 		grdflag = !grdflag;
 	    }
+	    
+	   
 	arr = fuselage(w, h, getRandomInt(0.75 * w, w), getRandomInt(0.3 * h, 0.5 * h), ctx);
 	// alert(arr);
 	tail(w / 4, arr[4], 1, 1, ctx, arr[1]);
 
+	
 	return cvs;
     }
 
@@ -297,6 +301,7 @@ function shipIt(w,h) {
 	ctx1.scale(1, -1);
 	ctx1.drawImage(img, 0, 0);
 	ctx1.restore();
+	
 	var img1 =new Image();
 	img1.src = cvs1.toDataURL('image/png');
 	return img1;
@@ -344,7 +349,7 @@ function tail(w,h,minparts,maxparts,ctx,x) {
 
 
 function fuselage(totalw,totalh,w,h,ctx) {
-	var fuseLageColors = ['Orange','Red','Green','Blue'];
+	var fuseLageColors = ['Orange','Red','Green','Blue','Yellow'];
 
 	/*ctx.save();
 	 ctx.translate(0,totalh);*/
@@ -362,7 +367,7 @@ function fuselage(totalw,totalh,w,h,ctx) {
 	ctx.fillStyle = fuseLageColors[getRandomInt(0, 3)];
 	ctx.strokeStyle = 'Black';
 	ctx.fill();
-	//ctx.stroke();
+	ctx.stroke();
 	cockpit(x1, x2, x3, x4, h, ctx);
 	return [x1, x2, x3, x4, h];
 	//ctx.restore();
@@ -388,7 +393,7 @@ function cockpit(x1,x2,x3,x4,h,ctx) {
 	ctx.fillStyle = 'Silver';
 
 	ctx.fill();
-	//ctx.stroke();
+	ctx.stroke();
 
     }
 

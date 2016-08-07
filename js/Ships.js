@@ -6,7 +6,7 @@ var basegun = {
     h : 2,
     type : 'norm',
     relativeY : 0,
-    reload : 40,
+    reload : 16,
     counter : 0
 
     };
@@ -95,6 +95,7 @@ CustomShip.prototype = Object.create(Ship.prototype);
 function CustomShip(shipParams,movParams) {
 	Ship.call(this, shipParams.loc, new Point(0, 0), shipParams.w, shipParams.h, shipParams.life);
 	this.isPlayer = false;
+	this.pts = shipParams.life;
 	this.shipType = shipParams.shipType;
 	//this.setWeapon('oneshot');
 	this.guns = shipParams.guns;
@@ -109,16 +110,6 @@ function CustomShip(shipParams,movParams) {
 	    H: getRandomInt(-5, 5)
 
 	    };
-	/*this.movParams = movParams || {
-	 A: getRandomInt(-5, -1),
-	 B: 0,
-	 C: 0,
-	 D: 0,
-	 E: 0,
-	 F: 0,
-	 G: 0,
-	 H: 0
-	 };*/
 	this.t = 0;
 
     }
@@ -157,9 +148,6 @@ CustomShip.prototype.tryWeapon = function() {
 CustomShip.prototype.fireWeapon = function(i) {
         var y = Math.round(this.loc.y + this.guns[i].relativeY * this.h);
 	var loc = new Point(this.loc.x, y);
-	/*var vel = this.guns[i].vel;
-	 vel = new Point(this.vel.x + vel.x,this.vel.y);
-	 this.guns[i].vel = vel;*/
 	this.guns[i].loc = loc;
 	return new CustomBullet(this.guns[i]);
     };
@@ -188,12 +176,12 @@ CustomPowerup.prototype.show = function() {
 	var grd = space.ctx.createRadialGradient(this.loc.x + w / 2, this.loc.y + w / 2, w / 4, this.loc.x + w / 2, this.loc.y + w / 2, w / 2);
 	grd.addColorStop(0, 'rgba(0,0,0,0.2)');
 	grd.addColorStop(1, this.color);
-	space.circle(this.loc.x + w / 2, this.loc.y + w / 2, w / 2, 'Black', grd);
+	space.circle(this.loc.x + w / 2, this.loc.y + w / 2, w / 2, null, grd);
     };
 
 Pedestal.prototype = Object.create(Ship.prototype);
 function Pedestal(loc,lightningId) {
-	Ship.call(this, loc, new Point(-1, 0), 40, 30, 25);
+	Ship.call(this, loc, new Point(-4, 0), 40, 30, 25);
 	this.isPlayer = false;
 	this.shipType = 'pedestal';
 	this.lightning = lightningId;
@@ -202,16 +190,21 @@ function Pedestal(loc,lightningId) {
 
 Pedestal.prototype.show = function() {
 	
-	var grd = 'Gold';
+	var grd = 'Gray';
 	var stripHt = this.h/3;
-	space.roundRect(this.loc.x, this.loc.y, this.w, stripHt, stripHt/2, grd, 'Black');
-	space.roundRect(this.loc.x, this.loc.y+2*stripHt, this.w, stripHt, stripHt/2, grd, 'Black');
+	var unitW = this.w/4;
+	//space.roundRect(this.loc.x, this.loc.y, this.w, stripHt, stripHt/2, grd, 'Black');
+	//space.roundRect(this.loc.x, this.loc.y+2*stripHt, this.w, stripHt, stripHt/2, grd, 'Black');
+	
+	space.roundRect(this.loc.x, this.loc.y+stripHt, this.w, stripHt, stripHt/2, grd);
+	space.roundRect(this.loc.x+unitW,this.loc.y,2*unitW,this.h,stripHt,grd);
+	
 	
     };
 
 Lightning.prototype = Object.create(Ship.prototype);
 function Lightning(loc,h) {
-	Ship.call(this, loc, new Point(-1, 0), 40, h, 1000);
+	Ship.call(this, loc, new Point(-4, 0), 40, h, 1000);
 	this.isPlayer = false;
 	this.shipType = 'lightning';
 	this.markForDelete = false;

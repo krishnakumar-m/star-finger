@@ -28,5 +28,5 @@ canvas {
 
 #gameover {
 z-index:999;
-background : rgba(230,0,0,0.5);
+/*background : rgba(230,0,0,0.5);*/
 }
