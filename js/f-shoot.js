@@ -61,7 +61,7 @@ var waves = {}  ;
 var endless = true;//Endless Random Hell
 var enemies = [], bullets = [], enemyBullets = [], powerUps=[],paused=false;
 var gameoverscreen,space,bg;
-var player,shipControl;
+var player,shipControl,score;
 
 var maxLife = 100;
 
@@ -88,23 +88,32 @@ function lifeMeter() {
     }
 
 
+function dispScore() {
+        bg.ctx.save();
+        bg.ctx.textAlign = 'center';
+	bg.text(score, bg.width - 50, 50, 'rgba(204,0,0,0.8)', '30px monospace');
+	bg.ctx.restore();
+    }
+
 function startScreen() {
 	var w = gameoverscreen.width, h = gameoverscreen.height;
 	var unitw = w / 10;
 	var unith = h / 20;
 	gameoverscreen.cvs.style.display = 'block';
 	gameoverscreen.clear();
-	randomStarBg(gameoverscreen,0.5);
+	gameoverscreen.rect(0, 0, w, h, 'Black', 'Black');
+	randomStarBg(gameoverscreen, 2);
 	gameoverscreen.ctx.textAlign = 'center';
 	gameoverscreen.ctx.textBaseLine = 'middle';
-	gameoverscreen.text('RANDOM SPACE', 4 * unitw, 4 * unith, 'White', '30px monospace');
-	gameoverscreen.rect(2 * unitw, 5 * unith , 4 * unitw , 1.5 * unith, 'Yellow', 'Red');
-	gameoverscreen.text('START', 4 * unitw, 6 * unith, 'White', '20px monospace');
+	gameoverscreen.text('RANDOM SPACE', 5 * unitw, 4 * unith, 'Green', '40px monospace');
+	gameoverscreen.rect(3 * unitw, 5 * unith , 4 * unitw , 1.5 * unith, 'Yellow', 'Red');
+	gameoverscreen.text('START', 5 * unitw, 6 * unith, 'White', '20px monospace');
 
     }
 
 function init() {
         level = 1;
+	score = 0;
         ships = generateShipTypes(level);
 	player = new Ship(new Point(0, space.height / 2), new Point(0, 0), 48, 40, maxLife);
 	player.setWeapon(0.1, basegun);
@@ -113,7 +122,7 @@ function init() {
         waves = {};
 	nextWaveIfEndless2();
 	shipControl = false;
-	gameoverscreen.cvs.style.display='none';
+	gameoverscreen.cvs.style.display = 'none';
 	levelAnimCounter = 0;
 	Game.init(game, 50);
 	enemies = [];
@@ -121,7 +130,7 @@ function init() {
 	enemyBullets = [];
 	powerUps = [];
 	debrisTime = getRandomInt(200, 400);
-	lightningTime = getRandomInt(300,350);
+	lightningTime = getRandomInt(300, 350);
     }
 function test() {
 
@@ -129,30 +138,30 @@ function test() {
 	gameoverscreen = new Canvas('gameover', window.innerWidth, window.innerHeight);
 	space = new Canvas('fld', window.innerWidth, window.innerHeight);
 
-	 var bgs = [{
+	var bgs = [{
 
 		speed: 1,
-		src: randomStarBg(bg, 0.5)
+		src: randomStarBg(bg, 0.2)
+		},
+		{
+		speed: 2,
+		src: bgLandScape(bg, getRandomInt(100, 200), 'hsl(240,40%,50%)', 3, 20, 0.55)
 		},
 		{
 		speed: 3,
-		src: bgLandScape(bg, getRandomInt(100, 200), 'hsl(240,40%,50%)', 3, 40, 0.55)
-		},
-		{
-		speed: 5,
 		src: bgLandScape(bg, getRandomInt(200, 300), 'hsl(240,40%,30%)', 4, 20, 0.5)
 		},
 		{
-		speed: 7,
-		src: bgLandScape(bg, getRandomInt(space.height-200, space.height), 'hsl(240,40%,10%)', 5, 10, 0.3)
+		speed: 4,
+		src: bgLandScape(bg, getRandomInt(space.height - 200, space.height), 'hsl(240,40%,10%)', 4, 20, 0.1)
 
 		}
 	    ];
-	 
+
 	//preLoadShipSprites();
 	playerSprite = getPlayerSprite();
 	preloadPowerSprites();
-	
+
 	//Scenery.init(bgs);
         Scenery.init(bg.cvs, bgs, bg.width, bg.height);
 	//init();
@@ -215,7 +224,7 @@ function test() {
 		var y = event.touches[0].pageY;
 		var unitw = gameoverscreen.width / 10;
 		var unith = gameoverscreen.height / 20;
-		if(x > 2 * unitw && y > 5 * unith && x < 6 * unitw && y < 6.5 * unith) {
+		if(x > 3 * unitw && y > 5 * unith && x < 7 * unitw && y < 6.5 * unith) {
 			init();
 
 		    }
@@ -230,11 +239,21 @@ function levelStartAnim() {
 	bg.text('WAVE ' + level, bg.width / 2, bg.height / 2, 'rgba(255,255,0,' + 1 / levelAnimCounter + ')', '30px monospace');
     }
 
+function getShipsLength() {
+	var len = enemies.length,count=0;
+	for(var i = 0;i < len;i++) {
+		if(!isNaN(enemies[i].shipType)) {
+			count++;
+		    }
+	    }
+	return count;
+    }
+
 function game() {
 	space.clear();
 	Scenery.scene();
 	newShips2();
-	if(levelTimer > 1000 && enemies.length == 0) {
+	if(levelTimer > 1000 && getShipsLength() == 0) {
 		level++;
 		ships = generateShipTypes(level);
 		levelTimer = 0;
@@ -242,13 +261,10 @@ function game() {
 		nextWaveIfEndless2();
 		levelAnimCounter = 1;
 		debrisTime = getRandomInt(200, 400);
+		lightningTime = getRandomInt(300, 500);
 	    }
 
-	if(levelAnimCounter > 0) {
-		levelStartAnim();
-		levelAnimCounter = (levelAnimCounter + 1) % 30;
 
-	    }
 	debrisMaker();
 	lightningMaker();
 	if(player.life > 0) {
@@ -270,6 +286,13 @@ function game() {
 	partSys.show();
 
 	lifeMeter();
+	dispScore();
+	if(levelAnimCounter > 0) {
+		levelStartAnim();
+		levelAnimCounter = (levelAnimCounter + 1) % 30;
+
+	    }
+
 	checkDeath();
 	levelTimer++;
     }
@@ -365,10 +388,12 @@ function hitEnemy() {
 
 					if(thisEnemy.life <= 0) {
 					        if(thisEnemy.shipType == 'pedestal') {
-						    thisEnemy.lightning.markForDelete = true;
-						}
-					    
-					    
+							thisEnemy.lightning.markForDelete = true;
+						    }
+
+					        if(thisEnemy.pts) {
+							score += thisEnemy.pts;
+						    }
 						var decider = Math.random();
 					        if(decider > 0.5) {
                                                         var thisPowerUp =null;
@@ -441,17 +466,18 @@ function checkDeath() {
 		var unitw = w / 10;
 		var unith = h / 20;
 		Game.pause();
-		gameoverscreen.cvs.style = 'display:block;';
+		gameoverscreen.cvs.style.display = 'block';
 		gameoverscreen.clear();
+		gameoverscreen.rect(0, 0, w, h, 'Red', 'rgba(152,0,0,0.5)');
 		gameoverscreen.ctx.textAlign = 'center';
 		gameoverscreen.ctx.textBaseLine = 'middle';
-		gameoverscreen.text('GAME OVER!', 4 * unitw, 4 * unith, 'White', '30px monospace');
+		gameoverscreen.text('GAME OVER!', 5 * unitw, 4 * unith, 'White', '30px monospace');
 		if(typeof bullt !== 'undefined') {
 			window.clearInterval(bullt);
 		    }
 
-		gameoverscreen.rect(2 * unitw, 5 * unith , 4 * unitw , 1.5 * unith, 'Yellow', 'Red');
-		gameoverscreen.text('RESTART', 4 * unitw, 6 * unith, 'White', '20px monospace');
+		gameoverscreen.rect(3 * unitw, 5 * unith , 4 * unitw , 1.5 * unith, 'Yellow', 'Red');
+		gameoverscreen.text('RESTART', 5 * unitw, 6 * unith, 'White', '20px monospace');
 	    }
     }
 
@@ -472,23 +498,23 @@ function newShips2() {
     }
 
 function nextWaveIfEndless2() {
-	if(endless) {
-		waves = {};
-		var nextTime = levelTimer + getRandomInt(100, 200);
-		if(nextTime > 1000) {
-			return;
-		    }
-		var nextWave = [], shipObj;
-		var nShips = getRandomInt(1, 5);
-		var interval = 1 / (nShips + 1);
-		for(i = 1;i <= nShips;i++) {
-			shipObj = {};
-			shipObj.y = interval * i;
-			shipObj.ship = getRandomInt(0, ships.length - 1);
-			nextWave.push(shipObj);
-		    }
-		waves[nextTime] = nextWave;
+	//if(endless) {
+	waves = {};
+	var nextTime = levelTimer + getRandomInt(100, 200);
+	if(nextTime > 1000) {
+		return;
 	    }
+	var nextWave = [], shipObj;
+	var nShips = getRandomInt(1, 5);
+	var interval = 1 / (nShips + 1);
+	for(i = 1;i <= nShips;i++) {
+		shipObj = {};
+		shipObj.y = interval * i;
+		shipObj.ship = getRandomInt(0, ships.length - 1);
+		nextWave.push(shipObj);
+	    }
+	waves[nextTime] = nextWave;
+	//    }
     } 
 
 function debrisMaker() {
@@ -502,25 +528,24 @@ function debrisMaker() {
 	    }
     }
 
-    
+
 function lightningMaker() {
-    if(levelTimer === lightningTime) {
-	var lightningId = enemies.length+2;
-	var startx = space.width;
-	var starty = getRandomInt(0,space.height/2);
-	var endy = getRandomInt(starty+space.height/4,space.height);
-	var lightningHt = (endy - starty) - 60;
-	var lightning = new Lightning(new Point(startx,starty+30),lightningHt);
-	enemies.push(new Pedestal(new Point(startx,starty),lightning));
-	enemies.push(new Pedestal(new Point(startx,endy-30),lightning));
-	enemies.push(lightning);
-	lightningTime+=getRandomInt(300,400);
+	if(levelTimer === lightningTime) {
+		var lightningId = enemies.length + 2;
+		var startx = space.width;
+		var starty = getRandomInt(0, space.height / 2);
+		var endy = getRandomInt(starty + space.height / 4, space.height);
+		var lightningHt = (endy - starty) - 60;
+		var lightning = new Lightning(new Point(startx, starty + 30), lightningHt);
+		enemies.push(new Pedestal(new Point(startx, starty), lightning));
+		enemies.push(new Pedestal(new Point(startx, endy - 30), lightning));
+		enemies.push(lightning);
+		lightningTime += getRandomInt(300, 500);
+	    }
+
     }
 
-}
-
-var bulletColors = ['Green','Red','Orange','Violet'];
-var bulletType = [{wt:0.9,item:'norm'},{wt:0.1,item:'targ'}];
+var bulletColors = ['Green','Red','Orange','Violet','Yellow','Blue'];
 
 function generateShipTypes(level) {
 	var SHIP_BASE_LEVEL = 3;
@@ -599,7 +624,19 @@ function randomWeightedItem(arr) {
 	return null;
     }
 
+function createBulletTypeWeightage(level){
+    var wt = (level>19)?0:(0.05 * (level -1));
+    return [{
+	'wt':1-wt,
+	'item':'norm'
+    },
+    {
+	'wt':wt,
+	'item':'targ'
+    }];
+}
 function getGuns(shipLevel,level) {
+        var bulletType = createBulletTypeWeightage(level);
         var UNIT_DMG = 1,maxGuns = 3;
 	var gunsListId = getGunSelector(shipLevel);
 	if(gunsListId == 15) {
@@ -619,6 +656,8 @@ function getGuns(shipLevel,level) {
 		var maxDmg = (shipLevel + level + 1) * UNIT_DMG;
 		var minVel = (shipLevel + 1);
 		var maxVel = (shipLevel * 2);
+		var minReload =20 + 10/level ;
+		var maxReload =10 + minReload;
 		var gun = {
 		    dmg : getRandomInt(minDmg, maxDmg),
 		    bulletColor : randomItem(bulletColors),
@@ -627,7 +666,7 @@ function getGuns(shipLevel,level) {
 		    h : 2,
 		    type : randomWeightedItem(bulletType),
 		    relativeY : parseFloat(relativePos.toFixed(1)),
-		    reload : getRandomInt(40, 60),
+		    reload : getRandomInt(minReload,maxReload),
 		    counter : 0
 
 		    };
