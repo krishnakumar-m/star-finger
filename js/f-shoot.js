@@ -125,32 +125,32 @@ function flashScreen() {
 	        gameoverscreen.ctx.save();
 		gameoverscreen.ctx.textBaseLine = 'middle';
 		gameoverscreen.ctx.textAlign = 'center';
-	        gameoverscreen.rect(2.5*unitw,7*unith,5*unitw,4*unith,'Red','Black');
+	        gameoverscreen.rect(2.5*unitw,10*unith,5*unitw,5*unith,'Red','Black');
 		if(i>99 && i<350) {
-		    gameoverscreen.text('POWERUPS',5*unitw,8*unith,'White',(unitw*0.5)+'px Terminal');
+		    gameoverscreen.text('POWERUPS',5*unitw,11*unith,'White',(unith*0.8)+'px Terminal');
 		} else if(i<100) {
-		    gameoverscreen.text('TOUCH TO FLY',5*unitw,8*unith,'White',(unitw*0.5)+'px Terminal');
-		    gameoverscreen.text('RELEASE',5*unitw,9*unith,'White',(unitw*0.5)+'px Terminal');
-		    gameoverscreen.text('TO PAUSE',5*unitw,10*unith,'White',(unitw*0.5)+'px Terminal');
+		    gameoverscreen.text('TOUCH TO FLY',5*unitw,11*unith,'White',(unith*0.8)+'px Terminal');
+		    gameoverscreen.text('RELEASE',5*unitw,13*unith,'White',(unith*0.8)+'px Terminal');
+		    gameoverscreen.text('TO PAUSE',5*unitw,14*unith,'White',(unith*0.8)+'px Terminal');
 		}
 		
 		
 		
 		if(i>99 &&  i< 150) {
-		    healthSprite(3 * unitw, 8.5 * unith, unitw, unith, gameoverscreen);
-		    gameoverscreen.text('HEALTH',5.5*unitw,9.25*unith,'White',(unitw*0.5)+'px Terminal');
+		    healthSprite(3 * unitw, 12.5 * unith, unitw/2, unith, gameoverscreen);
+		    gameoverscreen.text('HEALTH',5.5*unitw,13*unith,'White',(unith*0.8)+'px Terminal');
 		} else if(i>149 &&  i< 200) {
-		    shieldSprite(3 * unitw, 8.5 * unith, unitw, unith, gameoverscreen);
-		    gameoverscreen.text('SHIELD',5.5*unitw,9.25*unith,'White',(unitw*0.5)+'px Terminal');
+		    shieldSprite(3 * unitw, 12.5 * unith, unitw/2, unith, gameoverscreen);
+		    gameoverscreen.text('SHIELD',5.5*unitw,13*unith,'White',(unith*0.8)+'px Terminal');
 		} else if(i>199 &&  i< 250) {
-		    oneshotSprite(3 * unitw, 8.5 * unith, unitw, unith, gameoverscreen);
-		    gameoverscreen.text('GUN I',5.5*unitw,9.25*unith,'White',(unitw*0.5)+'px Terminal');
+		    oneshotSprite(3 * unitw, 12.5 * unith, unitw/2, unith, gameoverscreen);
+		    gameoverscreen.text('GUN I',5.5*unitw,13*unith,'White',(unith*0.8)+'px Terminal');
 		} else if(i>249 &&  i< 300) {
-		    twingunSprite(3 * unitw, 8.5 * unith, unitw, unith, gameoverscreen);
-		    gameoverscreen.text('GUN II',5.5*unitw,9.25*unith,'White',(unitw*0.5)+'px Terminal');
+		    twingunSprite(3 * unitw, 12.5 * unith, unitw/2, unith, gameoverscreen);
+		    gameoverscreen.text('GUN II',5.5*unitw,13*unith,'White',(unith*0.8)+'px Terminal');
 		} else if(i>299 &&  i< 350) {
-		    threeshotSprite(3 * unitw, 8.5 * unith, unitw, unith, gameoverscreen);
-		    gameoverscreen.text('GUN III',5.5*unitw,9.25*unith,'White',(unitw*0.5)+'px Terminal');
+		    threeshotSprite(3 * unitw, 12.5 * unith, unitw/2, unith, gameoverscreen);
+		    gameoverscreen.text('GUN III',5.5*unitw,13*unith,'White',(unith*0.8)+'px Terminal');
 		}
                 gameoverscreen.ctx.restore();
 		i = (i + 1) % 350;
