@@ -5,10 +5,10 @@
         versionCode = "1" 
         version     = "1.0.0" >
 
-    <name>Thumbfire</name>
+    <name>Random Space</name>
 
     <description>
-        Space shooter
+        Procedurally generated space shooter
     </description>
 
     <author href="https://build.phonegap.com" email="krishnakumarm777@gmail.com">
