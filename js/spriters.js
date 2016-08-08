@@ -205,7 +205,9 @@ function healthSprite(startx,starty,w,h,cvs) {
 function shieldSprite(startx,starty,w,h,cvs) {
         var ctx = cvs.ctx;
 	ctx.save();
+	
 	ctx.translate(startx, starty);
+	ctx.beginPath();
 	ctx.moveTo(w / 2, h);
 	ctx.quadraticCurveTo(0, h * 0.75, 0, 0.1 * h);
 	ctx.quadraticCurveTo(0.25 * w, 0.5 * h, w / 2, 0);

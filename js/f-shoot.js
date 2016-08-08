@@ -99,17 +99,64 @@ function startScreen() {
 	var w = gameoverscreen.width, h = gameoverscreen.height;
 	var unitw = w / 10;
 	var unith = h / 20;
+	gameoverscreen.ctx.save();
 	gameoverscreen.cvs.style.display = 'block';
 	gameoverscreen.clear();
 	gameoverscreen.rect(0, 0, w, h, 'Black', 'Black');
 	randomStarBg(gameoverscreen, 2);
 	gameoverscreen.ctx.textAlign = 'center';
 	gameoverscreen.ctx.textBaseLine = 'middle';
-	gameoverscreen.text('RANDOM SPACE', 5 * unitw, 4 * unith, 'Green', '40px monospace');
+	gameoverscreen.ctx.shadowBlur = 10;
+	gameoverscreen.ctx.shadowColor = 'Blue';
+	gameoverscreen.text('RANDOM SPACE', 5 * unitw, 4 * unith, 'White', 'bold 40px monospace');
+	gameoverscreen.ctx.restore();
+	gameoverscreen.ctx.textAlign = 'center';
+	gameoverscreen.ctx.textBaseLine = 'middle';
 	gameoverscreen.rect(3 * unitw, 5 * unith , 4 * unitw , 1.5 * unith, 'Yellow', 'Red');
 	gameoverscreen.text('START', 5 * unitw, 6 * unith, 'White', '20px monospace');
-
+        flashScreen();
     }
+
+function flashScreen() {
+	var i = 0;
+	var unitw =gameoverscreen.width  / 10;
+	var unith = gameoverscreen.height / 20;
+	Game.init(function() {
+	        gameoverscreen.ctx.save();
+		gameoverscreen.ctx.textBaseLine = 'middle';
+		gameoverscreen.ctx.textAlign = 'center';
+	        gameoverscreen.rect(2.5*unitw,7*unith,5*unitw,4*unith,'Red','Black');
+		if(i>99 && i<350) {
+		    gameoverscreen.text('POWERUPS',5*unitw,8*unith,'White',(unitw*0.5)+'px Terminal');
+		} else if(i<100) {
+		    gameoverscreen.text('TOUCH TO FLY',5*unitw,8*unith,'White',(unitw*0.5)+'px Terminal');
+		    gameoverscreen.text('RELEASE',5*unitw,9*unith,'White',(unitw*0.5)+'px Terminal');
+		    gameoverscreen.text('TO PAUSE',5*unitw,10*unith,'White',(unitw*0.5)+'px Terminal');
+		}
+		
+		
+		
+		if(i>99 &&  i< 150) {
+		    healthSprite(3 * unitw, 8.5 * unith, unitw, unith, gameoverscreen);
+		    gameoverscreen.text('HEALTH',5.5*unitw,9.25*unith,'White',(unitw*0.5)+'px Terminal');
+		} else if(i>149 &&  i< 200) {
+		    shieldSprite(3 * unitw, 8.5 * unith, unitw, unith, gameoverscreen);
+		    gameoverscreen.text('SHIELD',5.5*unitw,9.25*unith,'White',(unitw*0.5)+'px Terminal');
+		} else if(i>199 &&  i< 250) {
+		    oneshotSprite(3 * unitw, 8.5 * unith, unitw, unith, gameoverscreen);
+		    gameoverscreen.text('GUN I',5.5*unitw,9.25*unith,'White',(unitw*0.5)+'px Terminal');
+		} else if(i>249 &&  i< 300) {
+		    twingunSprite(3 * unitw, 8.5 * unith, unitw, unith, gameoverscreen);
+		    gameoverscreen.text('GUN II',5.5*unitw,9.25*unith,'White',(unitw*0.5)+'px Terminal');
+		} else if(i>299 &&  i< 350) {
+		    threeshotSprite(3 * unitw, 8.5 * unith, unitw, unith, gameoverscreen);
+		    gameoverscreen.text('GUN III',5.5*unitw,9.25*unith,'White',(unitw*0.5)+'px Terminal');
+		}
+                gameoverscreen.ctx.restore();
+		i = (i + 1) % 350;
+	    },60);
+    }   
+
 
 function init() {
         level = 1;
@@ -624,17 +671,17 @@ function randomWeightedItem(arr) {
 	return null;
     }
 
-function createBulletTypeWeightage(level){
-    var wt = (level>19)?0:(0.05 * (level -1));
-    return [{
-	'wt':1-wt,
-	'item':'norm'
-    },
-    {
-	'wt':wt,
-	'item':'targ'
-    }];
-}
+function createBulletTypeWeightage(level) {
+	var wt = (level > 19) ?0: (0.05 * (level - 1));
+	return [{
+		'wt':1 - wt,
+		'item':'norm'
+		},
+		{
+		'wt':wt,
+		'item':'targ'
+		}];
+    }
 function getGuns(shipLevel,level) {
         var bulletType = createBulletTypeWeightage(level);
         var UNIT_DMG = 1,maxGuns = 3;
@@ -656,7 +703,7 @@ function getGuns(shipLevel,level) {
 		var maxDmg = (shipLevel + level + 1) * UNIT_DMG;
 		var minVel = (shipLevel + 1);
 		var maxVel = (shipLevel * 2);
-		var minReload =20 + 10/level ;
+		var minReload =20 + 10 / level ;
 		var maxReload =10 + minReload;
 		var gun = {
 		    dmg : getRandomInt(minDmg, maxDmg),
@@ -666,7 +713,7 @@ function getGuns(shipLevel,level) {
 		    h : 2,
 		    type : randomWeightedItem(bulletType),
 		    relativeY : parseFloat(relativePos.toFixed(1)),
-		    reload : getRandomInt(minReload,maxReload),
+		    reload : getRandomInt(minReload, maxReload),
 		    counter : 0
 
 		    };
