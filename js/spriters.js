@@ -470,14 +470,42 @@ function bgLandScape(cvs,y,color,folds,max,cragginess) {
 	return cvs.cvs.toDataURL();
     }
 
-function randomStarBg(bg,x) {
+function randomStarBg(bg,x,n) {
         var hsl ;
+	var nStars = n||200;
 	var hs = [0,60,240];
 	bg.clear();
-	for(var i=0;i < 200;i++) {
+	for(var i=0;i < 100;i++) {
 	        var sat = getRandomInt(50, 100);
 		hsl = 'hsla(' + hs[getRandomInt(0, 2)] + ',' + sat + '%,88%,1';
 		bg.circle(bg.width * Math.random(), bg.height * Math.random(), x * Math.random(), hsl, hsl);
 	    }
 	return bg.cvs.toDataURL();
     }
+function nebula(cvs) {
+	var ctx = cvs.ctx;
+	
+	cvs.rect(0,0,cvs.width,cvs.height,null,'rgba(255,255,255,0');
+	randomStarBg(cvs,2,100);
+	
+        
+	ctx.globalCompositeOperation = 'lighter';
+	var grd = ctx.createLinearGradient(0, 0, 0, cvs.height);
+	grd.addColorStop(0, 'rgba(0,0,204,0.1)');
+	grd.addColorStop(1, 'rgba(255,0,0,0.1)');
+	var nClouds = cvs.width>cvs.height?cvs.width:cvs.height;
+	for(var i = 0; i < nClouds; i++) {
+		var r =Math.random() * (nClouds/20);
+		var x = getRandomInt(0,cvs.width);
+		var y = getRandomInt(0,cvs.height);
+		if(x<r) {
+		    cvs.circle(cvs.width+x,y,r,null,grd);
+		} else if(x+r>cvs.width) {
+		    cvs.circle(-x-r+cvs.width,y,r,null,grd);
+		}
+		cvs.circle(x, y, r,null,grd);
+	    }
+	return cvs.cvs.toDataURL('image/png');
+    }
+
+

@@ -192,7 +192,7 @@ function test() {
 		},
 		{
 		speed: 2,
-		src: bgLandScape(bg, getRandomInt(100, 200), 'hsl(240,40%,50%)', 3, 20, 0.55)
+		src: nebula(bg)
 		},
 		{
 		speed: 3,
@@ -204,7 +204,7 @@ function test() {
 
 		}
 	    ];
-
+//bgLandScape(bg, getRandomInt(100, 200), 'hsl(240,40%,50%)', 3, 20, 0.55)
 	//preLoadShipSprites();
 	playerSprite = getPlayerSprite();
 	preloadPowerSprites();
