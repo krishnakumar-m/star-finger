@@ -3,7 +3,7 @@ var basegun = {
     bulletColor : 'Red',
     vel : new Point(3, 0),
     w : 5,
-    h : 2,
+    h : 1,
     type : 'norm',
     relativeY : 0,
     reload : 16,
