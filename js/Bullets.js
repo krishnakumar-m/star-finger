@@ -28,6 +28,10 @@ function CustomBullet(bulletParams) {
 	this.hp = bulletParams.dmg;
     }
 CustomBullet.prototype.show = function() {
+    space.ctx.save();
+        space.ctx.shadowBlur = 5;
+	space.ctx.shadowColor = 'White';
 	space.rect(this.loc.x, this.loc.y, this.w, this.h, this.color, this.color);
+	space.ctx.restore();
 
     };
