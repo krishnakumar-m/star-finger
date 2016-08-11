@@ -485,14 +485,14 @@ function randomStarBg(bg,x,n) {
 function nebula(cvs) {
 	var ctx = cvs.ctx;
 	
-	cvs.rect(0,0,cvs.width,cvs.height,null,'rgba(255,255,255,0');
-	randomStarBg(cvs,2,100);
+	//cvs.rect(0,0,cvs.width,cvs.height,null,'rgba(255,255,255,0');
+	randomStarBg(cvs,0.5,100);
 	
         
 	ctx.globalCompositeOperation = 'lighter';
 	var grd = ctx.createLinearGradient(0, 0, 0, cvs.height);
-	grd.addColorStop(0, 'rgba(0,0,204,0.1)');
-	grd.addColorStop(1, 'rgba(255,0,0,0.1)');
+	grd.addColorStop(1, 'rgba(255,50,50,0.1)');
+	grd.addColorStop(0, 'rgba(0,0,255,0.1)');
 	var nClouds = cvs.width>cvs.height?cvs.width:cvs.height;
 	for(var i = 0; i < nClouds; i++) {
 		var r =Math.random() * (nClouds/20);
@@ -505,6 +505,8 @@ function nebula(cvs) {
 		}
 		cvs.circle(x, y, r,null,grd);
 	    }
+	 ctx.globalCompositeOperation = 'overlay';
+	cvs.rect(0,0,cvs.width,cvs.height,null,'rgba(0,0,0,0.8');
 	return cvs.cvs.toDataURL('image/png');
     }
 
