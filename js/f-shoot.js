@@ -102,8 +102,10 @@ function startScreen() {
 	gameoverscreen.ctx.save();
 	gameoverscreen.cvs.style.display = 'block';
 	gameoverscreen.clear();
+	
 	gameoverscreen.rect(0, 0, w, h, 'Black', 'Black');
 	randomStarBg(gameoverscreen, 2);
+	nebula(gameoverscreen);
 	gameoverscreen.ctx.textAlign = 'center';
 	gameoverscreen.ctx.textBaseLine = 'middle';
 	gameoverscreen.ctx.shadowBlur = 10;
@@ -112,9 +114,10 @@ function startScreen() {
 	gameoverscreen.ctx.restore();
 	gameoverscreen.ctx.textAlign = 'center';
 	gameoverscreen.ctx.textBaseLine = 'middle';
-	gameoverscreen.rect(3 * unitw, 5 * unith , 4 * unitw , 1.5 * unith, 'Yellow', 'Red');
-	gameoverscreen.text('START', 5 * unitw, 6 * unith, 'White', '20px monospace');
+	gameoverscreen.roundRect(3 * unitw, 5 * unith , 4 * unitw , 3 * unith,unith, 'Red', 'Yellow');
+	gameoverscreen.text('START', 5 * unitw, 7 * unith, 'White', 'bold '+ (unith)+'px monospace');
         flashScreen();
+	
     }
 
 function flashScreen() {
@@ -193,7 +196,7 @@ function test() {
 		{
 		speed: 2,
 		src: nebula(bg)
-		},
+		}/*,
 		{
 		speed: 3,
 		src: bgLandScape(bg, getRandomInt(200, 300), 'hsl(240,40%,30%)', 4, 20, 0.5)
@@ -202,7 +205,7 @@ function test() {
 		speed: 4,
 		src: bgLandScape(bg, getRandomInt(space.height - 200, space.height), 'hsl(240,40%,10%)', 4, 20, 0.1)
 
-		}
+		}*/
 	    ];
 //bgLandScape(bg, getRandomInt(100, 200), 'hsl(240,40%,50%)', 3, 20, 0.55)
 	//preLoadShipSprites();
@@ -271,7 +274,7 @@ function test() {
 		var y = event.touches[0].pageY;
 		var unitw = gameoverscreen.width / 10;
 		var unith = gameoverscreen.height / 20;
-		if(x > 3 * unitw && y > 5 * unith && x < 7 * unitw && y < 6.5 * unith) {
+		if(x > 3 * unitw && y > 5 * unith && x < 7 * unitw && y < 8 * unith) {
 			init();
 
 		    }
