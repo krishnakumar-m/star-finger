@@ -75,7 +75,7 @@ Canvas.prototype.roundRect = function(x, y, width, height, radius, fill, stroke)
     this.ctx.fill();
   }
   if (stroke) {
-    this.ctx.strokeStyle = fill;
+    this.ctx.strokeStyle = stroke;
     this.ctx.stroke();
   }
 
