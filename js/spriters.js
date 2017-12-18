@@ -297,13 +297,14 @@ function shipIt(w,h) {
 
 	cvs1.width = w;
 	cvs1.height = h;
+	img.onload = function() {
 	ctx1.drawImage(img, 0, h / 2);
 	ctx1.save();
 	ctx1.translate(0, h / 2);
 	ctx1.scale(1, -1);
 	ctx1.drawImage(img, 0, 0);
 	ctx1.restore();
-	
+	};
 	var img1 =new Image();
 	img1.src = cvs1.toDataURL('image/png');
 	return img1;
